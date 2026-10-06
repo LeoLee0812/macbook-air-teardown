@@ -63,7 +63,7 @@ def best_run(anchor, t0, t1):
     return best
 
 
-def label_box(x, y, dx, dy, tw, th=64):
+def label_box(x, y, dx, dy, tw, th=84):
     if dx >= 0:
         return (x + dx, y + dy - th / 2, x + dx + tw, y + dy + th / 2)
     return (x + dx - tw, y + dy - th / 2, x + dx, y + dy + th / 2)
@@ -86,7 +86,7 @@ CARD_WIN = chapter_card_windows()
 
 def place(anchor, f0, f1, title, sub, dx0, dy0, used):
     """选一个让标签整段都在画面里、且不压章节卡/其它标签的偏移"""
-    tw = max(text_w(title, 34), text_w(sub, 24)) + 8
+    tw = max(text_w(title, 36), text_w(sub, 25)) + 40
     tr = track(anchor)
     pts = [tr[str(f)] for f in range(f0, f1 + 1) if str(f) in tr]
     cands = [(dx0, dy0), (-dx0, dy0), (dx0, -dy0), (-dx0, -dy0), (int(dx0 * 1.4), dy0), (-int(dx0 * 1.4), dy0)]
@@ -242,7 +242,7 @@ for c in callouts:
     parts.append(f'''<div class="co" id="{c["id"]}">
   <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="{pts}" /></svg>
   <div class="co-dot"></div><div class="co-ring"></div>
-  <div class="co-lab co-{side}" style="{pos}top:{c['dy'] - 26}px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>{esc(c["title"])}</div>{sub}</div>
+  <div class="co-lab co-{side}" style="{pos}top:{c['dy'] - (36 if c['sub'] else 30)}px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>{esc(c["title"])}</div>{sub}</div>
 </div>''')
 for k in knoll:
     parts.append(f'''<div class="kn" id="{k["id"]}"><div class="kn-lab" style="top:-16px;" data-layout-allow-overlap>{esc(k["name"])}</div></div>''')
@@ -254,21 +254,22 @@ for e in explode:
     parts.append(f'''<div class="co ex" id="{e["id"]}">
   <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="{pts}" /></svg>
   <div class="co-dot"></div>
-  <div class="co-lab co-{side}" style="{pos}top:{e['dy'] - 24:.0f}px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>{esc(e["title"])}</div></div>
+  <div class="co-lab co-{side}" style="{pos}top:{e['dy'] - 30:.0f}px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>{esc(e["title"])}</div></div>
 </div>''')
 for i, c in enumerate(chapters):
     parts.append(f'''<div class="scrim scrim-tl" id="chs{i}"></div>''')
     parts.append(f'''<div class="card" id="ch{i}"><div class="card-rule"></div><div class="card-t" data-layout-allow-overlap>{esc(c["cn"])}</div></div>''')
 for i, t in enumerate(texts):
     k = t["kind"]
-    sc_cls = {"title": "scrim-tl", "stat": "scrim-r", "note": "scrim-bl"}.get(k)
+    sc_cls = {"title": "scrim-tl", "stat": "scrim-l" if t.get("pos") == "left" else "scrim-r", "note": "scrim-bl"}.get(k)
     if sc_cls and t.get("pos") != "center":
         parts.append(f'''<div class="scrim {sc_cls}" id="txs{i}"></div>''')
     if k == "title":
         parts.append(f'''<div class="tx tx-title" id="tx{i}"><div class="tt-main" data-layout-allow-overlap>{esc(t["main"])}</div><div class="tt-sub" data-layout-allow-overlap>{esc(t["sub"])}</div></div>''')
     elif k == "stat":
         num, unit = split_stat(t["main"])
-        parts.append(f'''<div class="tx tx-stat" id="tx{i}"><div class="st-row"><span class="st-num">{esc(num)}</span><span class="st-unit">{esc(unit)}</span></div><div class="st-sub" data-layout-allow-overlap>{esc(t["sub"])}</div></div>''')
+        cls = "tx-stat tx-stat-l" if t.get("pos") == "left" else "tx-stat"
+        parts.append(f'''<div class="tx {cls}" id="tx{i}"><div class="st-row"><span class="st-num">{esc(num)}</span><span class="st-unit">{esc(unit)}</span></div><div class="st-sub" data-layout-allow-overlap>{esc(t["sub"])}</div></div>''')
     elif k == "note":
         cls = "tx-note-c" if t["pos"] == "center" else "tx-note"
         sub = f'<div class="nt-sub" data-layout-allow-overlap>{esc(t["sub"])}</div>' if t["sub"] else ""
@@ -306,7 +307,8 @@ html, body {{ width: 1920px; height: 1080px; overflow: hidden; background: #0709
   box-shadow: 0 0 0 3px rgba(7,9,12,0.55), 0 0 18px rgba(140,200,242,0.75); }}
 .co-ring {{ position: absolute; left: -17px; top: -17px; width: 34px; height: 34px; border-radius: 50%;
   border: 2px solid {ACCENT}; opacity: 0.0; }}
-.co-lab {{ position: absolute; white-space: nowrap; }}
+.co-lab {{ position: absolute; white-space: nowrap; background: rgba(7,9,13,0.60); padding: 9px 16px 11px;
+  border-radius: 10px; box-shadow: 0 6px 24px rgba(0,0,0,0.35); }}
 .co-r {{ text-align: left; }}
 .co-l {{ text-align: right; }}
 .co-t {{ font-size: 36px; font-weight: 600; letter-spacing: 0.01em; line-height: 1.25;
@@ -315,7 +317,7 @@ html, body {{ width: 1920px; height: 1080px; overflow: hidden; background: #0709
   text-shadow: 0 2px 14px rgba(0,0,0,0.9); }}
 .ex .co-t {{ font-size: 32px; }}
 .kn-tick {{ position: absolute; left: -1px; width: 2px; background: {ACCENT}; opacity: 0.85; }}
-.kn-lab {{ position: absolute; left: -240px; width: 480px; text-align: center; white-space: nowrap; font-size: 24px; font-weight: 500;
+.kn-lab {{ position: absolute; left: -240px; width: 480px; text-align: center; white-space: nowrap; font-size: 25px; font-weight: 500;
   color: {FG}; text-shadow: 0 2px 12px rgba(0,0,0,0.9); }}
 .card {{ position: absolute; left: 118px; top: 104px; opacity: 0; }}
 .card-rule {{ width: 72px; height: 3px; background: {ACCENT}; margin-bottom: 22px; transform-origin: left center; }}
@@ -328,6 +330,8 @@ html, body {{ width: 1920px; height: 1080px; overflow: hidden; background: #0709
 .tt-sub {{ margin-top: 22px; font-size: 38px; font-weight: 400; color: {FG2}; letter-spacing: 0.06em; }}
 .tx-stat {{ right: 130px; top: 380px; text-align: right; }}
 .st-row {{ display: flex; align-items: baseline; justify-content: flex-end; gap: 14px; }}
+.tx-stat-l {{ left: 104px; right: auto; text-align: left; }}
+.tx-stat-l .st-row {{ justify-content: flex-start; }}
 .st-num {{ font-family: "IBM Plex Mono", monospace; font-weight: 700; font-size: 132px; line-height: 1; letter-spacing: -0.03em;
   text-shadow: 0 4px 30px rgba(0,0,0,0.6); }}
 .st-unit {{ font-family: "Noto Sans SC", "IBM Plex Mono", sans-serif; font-weight: 500; font-size: 48px; color: {ACCENT}; }}
@@ -350,6 +354,7 @@ html, body {{ width: 1920px; height: 1080px; overflow: hidden; background: #0709
   background: radial-gradient(ellipse at center, rgba(4,6,9,0.62) 0%, rgba(4,6,9,0.38) 42%, rgba(4,6,9,0) 72%); }}
 .scrim-tl {{ left: -260px; top: -160px; width: 1500px; height: 720px; }}
 .scrim-r {{ right: -280px; top: 230px; width: 1200px; height: 560px; }}
+.scrim-l {{ left: -300px; top: 230px; width: 1200px; height: 560px; }}
 .scrim-bl {{ left: -260px; bottom: -200px; width: 1500px; height: 560px; }}
 """
 
@@ -407,8 +412,8 @@ D.chapters.forEach((c, i) => {
   tl.to(sc, { opacity: 0, duration: 0.5, ease: "power1.in" }, c.t0 + hold);
   tl.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.2, ease: "none" }, c.t0 + 0.05);
   tl.fromTo(el.querySelector(".card-rule"), { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "expo.out" }, c.t0 + 0.05);
-  tl.fromTo(el.querySelector(".card-t"), { y: 46, opacity: 0, clipPath: "inset(0 0 100% 0)" },
-    { y: 0, opacity: 1, clipPath: "inset(0 0 0% 0)", duration: 0.7, ease: "expo.out" }, c.t0 + 0.1);
+  tl.fromTo(el.querySelector(".card-t"), { y: 46, opacity: 0, clipPath: "inset(-30% -8% 130% -8%)" },
+    { y: 0, opacity: 1, clipPath: "inset(-30% -8% -30% -8%)", duration: 0.7, ease: "expo.out" }, c.t0 + 0.1);
   tl.to(el, { opacity: 0, y: -14, duration: 0.4, ease: "power2.in" }, c.t0 + hold);
 });
 // 文字块
@@ -421,12 +426,12 @@ D.texts.forEach((t, i) => {
   }
   if (t.kind === "title") {
     tl.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.2 }, t.t0);
-    tl.fromTo(el.querySelector(".tt-main"), { y: 60, clipPath: "inset(0 0 100% 0)" }, { y: 0, clipPath: "inset(0 0 0% 0)", duration: 1.0, ease: "expo.out" }, t.t0);
+    tl.fromTo(el.querySelector(".tt-main"), { y: 60, clipPath: "inset(-30% -8% 130% -8%)" }, { y: 0, clipPath: "inset(-30% -8% -30% -8%)", duration: 1.0, ease: "expo.out" }, t.t0);
     tl.fromTo(el.querySelector(".tt-sub"), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" }, t.t0 + 0.45);
     tl.to(el, { opacity: 0, y: -20, duration: 0.5, ease: "power2.in" }, t.t1 - 0.5);
   } else if (t.kind === "stat") {
     tl.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.2 }, t.t0);
-    tl.fromTo(el.querySelector(".st-row"), { y: 50, clipPath: "inset(0 0 100% 0)" }, { y: 0, clipPath: "inset(0 0 0% 0)", duration: 0.8, ease: "expo.out" }, t.t0);
+    tl.fromTo(el.querySelector(".st-row"), { y: 50, clipPath: "inset(-30% -8% 130% -8%)" }, { y: 0, clipPath: "inset(-30% -8% -30% -8%)", duration: 0.8, ease: "expo.out" }, t.t0);
     tl.fromTo(el.querySelector(".st-sub"), { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, t.t0 + 0.3);
     tl.to(el, { opacity: 0, duration: 0.35, ease: "power2.in" }, t.t1 - 0.35);
   } else if (t.kind === "note") {

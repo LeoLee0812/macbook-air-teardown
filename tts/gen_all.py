@@ -22,14 +22,14 @@ def one(seg):
     if os.path.exists(out) and os.path.getsize(out) > 2000:
         return seg["id"], {"ok": True, "cached": True}
     kw = dict(voice=N["voice"])
-    if which == "next":
+    if which == "next" and N.get("text_prompt"):
         kw["text_prompt"] = N["text_prompt"]
     # 句首加一个逗号：Next 模型会吞掉第一个字，加了就正常；两个版本发同样的文本
-    r = synth(model, N.get("lead", "") + seg["text"], out, **kw)
+    r = synth(model, N.get("lead", "") + seg["text"], out, tries=8, **kw)
     return seg["id"], r
 
 
-workers = 4 if which == "next" else 6
+workers = 2 if which == "next" else 6   # next 并发太高会 429
 res = {}
 with cf.ThreadPoolExecutor(workers) as ex:
     for sid, r in ex.map(one, N["segments"]):

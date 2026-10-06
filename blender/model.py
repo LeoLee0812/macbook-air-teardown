@@ -535,7 +535,11 @@ def make_logic_board(M, base, c):
     anchor("nand", a, (L.NAND[0]["cx"], L.NAND[0]["cy"], zb - 1.0))
     anchor("n1", a, (L.N1["cx"], L.N1["cy"], zb - 1.2))
     anchor("pmic", a, (L.PMIC[1]["cx"], L.PMIC[1]["cy"], zb - 0.7))
-    anchor("thermal", a, (H["cx"] - 14, H["cy"] + 10, zt - H["t"]))
+    # 热模块锚点挂在散热板上（散热板会单独错开展示，标注要跟着它走）
+    e = empty("anc_thermal", (0, 0, 0), c=coll("Anchors"), size=0.003)
+    e.parent = plate
+    e.location = Vector(v3(H["cx"] - 14, H["cy"] + 10, zt - H["t"])) - (a.location + plate.location)   # 散热板此时已挂在主板装配体下
+    ANCH["thermal"] = e
     anchor("logicboard", a, (-60, B["cy"] - 12, zb))
     anchor("lb_connectors", a, (0, 46.6, zb - 0.8))
     return a

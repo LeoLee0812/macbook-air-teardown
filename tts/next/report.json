@@ -1,0 +1,178 @@
+[
+ {
+  "id": "s01",
+  "dur": 3.64,
+  "window": 5.5,
+  "over": -1.86,
+  "secs": 14.45,
+  "ok": true
+ },
+ {
+  "id": "s02",
+  "dur": 3.32,
+  "window": 3.85,
+  "over": -0.53,
+  "secs": 15.63,
+  "ok": true
+ },
+ {
+  "id": "s03",
+  "dur": 6.68,
+  "window": 9.1,
+  "over": -2.42,
+  "secs": 16.86,
+  "ok": true
+ },
+ {
+  "id": "s04",
+  "dur": 3.52,
+  "window": 4.5,
+  "over": -0.98,
+  "secs": 14.99,
+  "ok": true
+ },
+ {
+  "id": "s05",
+  "dur": 1.88,
+  "window": 2.75,
+  "over": -0.87,
+  "secs": 12.58,
+  "ok": true
+ },
+ {
+  "id": "s06",
+  "dur": 6.0,
+  "window": 9.45,
+  "over": -3.45,
+  "secs": 17.77,
+  "ok": true
+ },
+ {
+  "id": "s07",
+  "dur": 3.64,
+  "window": 5.6,
+  "over": -1.96,
+  "secs": 14.8,
+  "ok": true
+ },
+ {
+  "id": "s08",
+  "dur": 2.2,
+  "window": 3.7,
+  "over": -1.5,
+  "secs": 14.29,
+  "ok": true
+ },
+ {
+  "id": "s09",
+  "dur": 1.28,
+  "window": 1.85,
+  "over": -0.57,
+  "secs": 12.31,
+  "ok": true
+ },
+ {
+  "id": "s10",
+  "dur": 2.88,
+  "window": 3.8,
+  "over": -0.92,
+  "secs": 15.3,
+  "ok": true
+ },
+ {
+  "id": "s11",
+  "dur": 2.88,
+  "window": 4.2,
+  "over": -1.32,
+  "secs": 14.81,
+  "ok": true
+ },
+ {
+  "id": "s12",
+  "dur": 3.4,
+  "window": 4.6,
+  "over": -1.2,
+  "secs": 15.69,
+  "ok": true
+ },
+ {
+  "id": "s13",
+  "dur": 1.96,
+  "window": 2.4,
+  "over": -0.44,
+  "secs": 12.7,
+  "ok": true
+ },
+ {
+  "id": "s14",
+  "dur": 2.8,
+  "window": 3.7,
+  "over": -0.9,
+  "secs": 14.58,
+  "ok": true
+ },
+ {
+  "id": "s15",
+  "dur": 4.36,
+  "window": 5.0,
+  "over": -0.64,
+  "secs": 15.33,
+  "ok": true
+ },
+ {
+  "id": "s16",
+  "dur": 2.44,
+  "window": 3.3,
+  "over": -0.86,
+  "secs": 15.23,
+  "ok": true
+ },
+ {
+  "id": "s17",
+  "dur": 2.48,
+  "window": 2.15,
+  "over": 0.33,
+  "secs": 12.65,
+  "ok": true
+ },
+ {
+  "id": "s18",
+  "dur": 6.44,
+  "window": 7.2,
+  "over": -0.76,
+  "secs": 16.96,
+  "ok": true
+ },
+ {
+  "id": "s19",
+  "dur": 3.04,
+  "window": 4.0,
+  "over": -0.96,
+  "secs": 38.01,
+  "ok": true
+ },
+ {
+  "id": "s20",
+  "dur": 2.84,
+  "window": 3.6,
+  "over": -0.76,
+  "secs": 14.14,
+  "ok": true
+ },
+ {
+  "id": "s21",
+  "dur": 2.88,
+  "window": 4.7,
+  "over": -1.82,
+  "secs": 13.13,
+  "ok": true
+ },
+ {
+  "id": "s22",
+  "dur": 2.32,
+  "window": 2.3,
+  "over": 0.02,
+  "secs": 14.21,
+  "ok": true
+ }
+]

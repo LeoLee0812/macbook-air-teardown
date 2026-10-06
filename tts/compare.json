@@ -1,0 +1,43 @@
+{
+ "next": {
+  "model": "qwen-audio-3.1-tts-next",
+  "segments": 22,
+  "synth_secs_avg": 15.75,
+  "synth_secs_total": 346.4,
+  "speech_secs": 71.58,
+  "chars_per_sec": 5.1,
+  "sped_up": 0,
+  "max_tempo": 1.0,
+  "overflow": 0,
+  "cer_avg": 0.021,
+  "cer_bad": [],
+  "vo_lufs": -18.8,
+  "vo_peak": 0.1
+ },
+ "flash": {
+  "model": "qwen-audio-3.1-tts-flash",
+  "segments": 22,
+  "synth_secs_avg": 7.79,
+  "synth_secs_total": 171.3,
+  "speech_secs": 96.03,
+  "chars_per_sec": 3.8,
+  "sped_up": 5,
+  "max_tempo": 1.15,
+  "overflow": 2,
+  "cer_avg": 0.034,
+  "cer_bad": [
+   {
+    "id": "s02",
+    "cer": 0.182,
+    "hyp": "厚一点一三厘米,重一点二三千克。"
+   }
+  ],
+  "vo_lufs": -19.4,
+  "vo_peak": 0.0
+ },
+ "gemini_blind_AB": {
+  "A": "next",
+  "B": "flash",
+  "review": "我没有收到音频文件。\n\n您在提问中只提供了录音 A 和录音 B 的**文字文案**，并没有附带任何可播放的音频文件或音频链接。\n\n作为配音导演，要评判声音的自然度、吐字清晰度、节奏停顿以及是否有吞字、怪音和机械感，必须“听”到实际的声音，无法仅凭文字脑补。\n\n请您上传音频文件或提供音频链接，收到后我会立刻为您进行详细的专业盲评和打分！"
+ }
+}

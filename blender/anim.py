@@ -341,7 +341,7 @@ def build(P, ANCH, cam, tgt, LIGHTS, M):
     cr.move(b(31.5), b(32.5), (-0.068, 0.03, 0.10), (-0.098, 0.067, 0.024), lens=60, fstop=4.0, ease="cubic")
     cr.move(b(32.5), b(33.5), (-0.074, 0.028, 0.095), (-0.095, 0.068, 0.024), ease="sine")
     cr.move(b(33.5), b(34.5), (0.0, 0.005, 0.17), (-0.02, 0.07, 0.024), lens=45, fstop=6.3, ease="cubic")
-    callout("thermal", b(31.4), b(32.45), "热模块 · 与主板一体", "无风扇，安静无声", dx=230, dy=-120)
+    callout("thermal", b(30.62), b(31.4), "热模块 · 与主板一体", "无风扇，安静无声", dx=230, dy=-120)
     callout("soc", b(32.45), b(33.6), "M5 芯片", "10 核 CPU · 最高 10 核 GPU", dx=-250, dy=-120)
     callout("mem", b(32.8), b(33.6), "统一内存 16GB 起", "带宽 153GB/s", dx=240, dy=110)
     callout("nand", b(33.7), b(34.6), "固态硬盘 512GB 起", "", dx=-220, dy=-110)
@@ -388,7 +388,7 @@ def build(P, ANCH, cam, tgt, LIGHTS, M):
     # 屏幕往上飞走的同时，镜头低头看向键盘
     cr.move(b(41.85), b(43.3), (-0.12, -0.27, 0.15), (-0.02, 0.03, 0.006), lens=50, fstop=4.5, ease="cubic")
     callout("screen", b(38.6), b(39.95), "13.6 英寸 Liquid Retina", "2560 × 1664 · 224 ppi", dx=-260, dy=-130)
-    text("stat", b(39.0), b(39.95), "500 尼特", "10 亿色 · P3 广色域", "right")
+    text("stat", b(39.0), b(39.95), "500 尼特", "10 亿色 · P3 广色域", "left")
     callout("camera", b(40.55), b(41.3), "1200 万像素人物居中摄像头", "支持桌上视角", dx=230, dy=110)
     text("note", b(41.8), b(42.9), "铰链 6 颗螺丝 · 屏幕与摄像头各一根排线", "", "left")
     hm = P["hingemounts"]

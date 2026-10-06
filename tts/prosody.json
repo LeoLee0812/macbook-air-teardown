@@ -1,0 +1,14 @@
+{
+ "next": {
+  "f0_std_semitones": 3.72,
+  "rolloff95_hz": 6239,
+  "flatness": 0.0012,
+  "pauses_per_seg": 0.64
+ },
+ "flash": {
+  "f0_std_semitones": 5.84,
+  "rolloff95_hz": 7873,
+  "flatness": 0.0027,
+  "pauses_per_seg": 1.77
+ }
+}
