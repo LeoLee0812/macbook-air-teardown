@@ -16,3 +16,4 @@ video/renders/
 tts/**/*.wav
 tts/probe/
 *.log
+out/

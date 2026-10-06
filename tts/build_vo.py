@@ -51,11 +51,11 @@ vo = os.path.join(HERE, which, "vo.wav")
 subprocess.run(["ffmpeg", "-v", "error", "-y"] + inputs + ["-filter_complex", ";".join(filt), "-map", "[vo]", "-ar", "48000",
                                                             "-ac", "1", vo], check=True)
 
-# 旁白响度先拉到 -16 LUFS 左右，配乐被旁白侧链压低约 9 dB，最后整体 -14 LUFS / -1 dBTP
+# 旁白响度先拉到 -15 LUFS 左右，配乐被旁白侧链压低约 7–9 dB（实测 ratio 9 会压掉 13–17 dB，太狠），最后整体 -14 LUFS / -1 dBTP
 mix = os.path.join(HERE, which, f"mix_{which}.wav")
 fc = ("[0:a]loudnorm=I=-15:TP=-2:LRA=7,aformat=channel_layouts=stereo,asplit=2[vo1][vo2];"
       "[1:a]volume=0.92[mus];"
-      "[mus][vo1]sidechaincompress=threshold=0.02:ratio=9:attack=25:release=420:makeup=1[duck];"
+      "[mus][vo1]sidechaincompress=threshold=0.05:ratio=4:attack=30:release=500:makeup=1[duck];"
       "[duck][vo2]amix=inputs=2:normalize=0:duration=first,loudnorm=I=-14:TP=-1:LRA=9[out]")
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vo, "-i", MUSIC, "-filter_complex", fc, "-map", "[out]", "-ar", "48000",
                 "-t", str(TOTAL), mix], check=True)

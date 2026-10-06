@@ -26,7 +26,7 @@ for k in ov["knoll"]:
     k["anchor"] = PART_ANCHOR.get(k["part"], k["part"])
     want(k["anchor"], k["t0"], k["t1"])
 for e in ov["explode"]:
-    e["anchor"] = PART_ANCHOR.get(e["part"], e["part"])
+    e["anchor"] = e.get("anchor") or PART_ANCHOR.get(e["part"], e["part"])
     want(e["anchor"], e["t0"], e["t1"])
 # 平铺图标签用的「虚拟锚点」：世界坐标里的固定点（零件落定后静止，镜头缓慢推近）
 VIRTUAL = {"kn_lid": (-0.345, 0.056), "kn_topcase": (0.0, 0.056), "kn_bottomcase": (0.345, 0.056),

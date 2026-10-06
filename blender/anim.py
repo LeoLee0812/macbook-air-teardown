@@ -466,9 +466,11 @@ def build(P, ANCH, cam, tgt, LIGHTS, M):
     cr.move(b(53), b(54.4), (0.62, -0.78, 0.42), (0.0, 0.035, 0.085), lens=40, fstop=11, ease="cubic")
     cr.move(b(54.4), b(57), (-0.42, -0.86, 0.36), (0.0, 0.035, 0.09), ease="sine", arc=True)
     cr.move(b(57), b(59) - 1 / FPS, (-0.64, -0.42, 0.15), (0.0, 0.04, 0.095), lens=40, ease="cubic", arc=True)
-    for k, (part, ti) in enumerate([("lid", "屏幕总成"), ("keyboard", "键帽"), ("topcase", "顶壳"), ("trackpad", "触控板"),
-                                    ("battery", "电池"), ("logicboard", "主板"), ("bottomcase", "底壳")]):
-        OVER["explode"].append(dict(part=part, title=ti, t0=round(b(54.2) + k * BEAT, 3), t1=round(b(58.8), 3)))
+    # 主板在爆炸图里被顶壳挡住，不标；电池指向露出来的前角电芯
+    for k, (part, ti, an) in enumerate([("lid", "屏幕总成", "screen"), ("keyboard", "键帽", "keyboard"),
+                                        ("topcase", "顶壳", "topcase"), ("trackpad", "触控板", "trackpad"),
+                                        ("battery", "电池", "cell_FL"), ("bottomcase", "底壳", "bottomcase")]):
+        OVER["explode"].append(dict(part=part, title=ti, anchor=an, t0=round(b(54.2) + k * BEAT, 3), t1=round(b(58.8), 3)))
 
     # ================================================================ P 合体 + 片尾  B59 → 结束
     for k, name in enumerate(ex):
@@ -489,7 +491,7 @@ def build(P, ANCH, cam, tgt, LIGHTS, M):
     cr.move(b(59), b(60.5), (0.36, -0.40, 0.20), (0.0, 0.0, 0.006), lens=50, fstop=5.6, ease="cubic")
     cr.move(b(60.5), END - 1 / FPS, (0.30, -0.36, 0.165), (0.0, 0.0, 0.005), ease="sine")
     text("end", hit2 + 0.2, END, "MacBook Air", "13 英寸 · M5", "center")
-    text("disclaimer", hit2 + 0.9, END, "3D 示意模型 · 内部布局依据 Apple 官方维修手册与公开拆解资料", "", "bottom")
+    text("disclaimer", END - 1.9, END, "3D 示意模型 · 内部布局依据 Apple 官方维修手册与公开拆解资料", "", "bottom")
 
     TL.commit()
     # 导出叠加层数据

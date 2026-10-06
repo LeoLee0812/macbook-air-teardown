@@ -280,7 +280,9 @@ def make_top_case(M, base, c):
     P["topcase_extras"] = [bp, kf, kl, mic, mf]
     anchor("kb_backplate", base, (-60, L.KB_CY, L.Z_IN_TOP - 0.5))
     anchor("mics", base, (L.MICS[1][0], L.MICS[1][1], L.Z_IN_TOP - 1.0))
-    anchor("topcase", base, (-120, -60, L.BASE_H))
+    # 顶壳锚点挂在顶壳网格上（爆炸图里顶壳会单独抬起）
+    et = empty("anc_topcase", v3(-120, -60, L.BASE_H), parent=o, c=coll("Anchors"), size=0.003)
+    ANCH["topcase"] = et
     return o
 
 

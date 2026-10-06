@@ -275,6 +275,7 @@ for i, t in enumerate(texts):
         sub = f'<div class="nt-sub" data-layout-allow-overlap>{esc(t["sub"])}</div>' if t["sub"] else ""
         parts.append(f'''<div class="tx {cls}" id="tx{i}"><div class="nt-main" data-layout-allow-overlap>{esc(t["main"])}</div>{sub}</div>''')
     elif k == "end":
+        parts.append(f'''<div class="scrim-top" id="txs{i}"></div>''')
         parts.append(f'''<div class="tx tx-end" id="tx{i}"><div class="en-main" data-layout-allow-overlap>{esc(t["main"])}</div><div class="en-sub" data-layout-allow-overlap>{esc(t["sub"])}</div></div>''')
     elif k == "disclaimer":
         parts.append(f'''<div class="tx tx-disc" id="tx{i}" data-layout-allow-overlap>{esc(t["main"])}</div>''')
@@ -341,10 +342,12 @@ html, body {{ width: 1920px; height: 1080px; overflow: hidden; background: #0709
 .nt-main {{ font-size: 46px; font-weight: 600; text-shadow: 0 2px 18px rgba(0,0,0,0.85); }}
 .tx-note-c .nt-main {{ font-family: "Noto Serif SC", serif; font-weight: 900; font-size: 96px; letter-spacing: 0.08em; }}
 .nt-sub {{ margin-top: 8px; font-size: 30px; color: {FG2}; text-shadow: 0 2px 14px rgba(0,0,0,0.9); }}
-.tx-end {{ left: 0; right: 0; top: 168px; text-align: center; }}
+.tx-end {{ left: 0; right: 0; top: 44px; text-align: center; }}
+.scrim-top {{ position: absolute; left: 0; right: 0; top: 0; height: 460px; opacity: 0; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(3,4,6,0.78) 0%, rgba(3,4,6,0.45) 45%, rgba(3,4,6,0) 100%); }}
 .en-main {{ font-family: "Noto Serif SC", serif; font-weight: 900; font-size: 124px; letter-spacing: 0.02em;
   text-shadow: 0 4px 40px rgba(0,0,0,0.7); }}
-.en-sub {{ margin-top: 14px; font-size: 38px; color: {FG2}; letter-spacing: 0.12em; }}
+.en-sub {{ margin-top: 2px; font-size: 36px; color: {FG2}; letter-spacing: 0.12em; }}
 .tx-disc {{ left: 0; right: 0; bottom: 64px; text-align: center; font-size: 22px; color: #8D949B; letter-spacing: 0.04em; }}
 .pg {{ position: absolute; left: 50%; bottom: 46px; width: 420px; margin-left: -210px; height: 4px; display: flex; gap: 8px; opacity: 0; }}
 .pg-seg {{ flex: 1; height: 4px; background: rgba(255,255,255,0.16); border-radius: 2px; overflow: hidden; }}
@@ -406,7 +409,7 @@ for (const it of D.knoll) {
 // 章节卡
 D.chapters.forEach((c, i) => {
   const el = q("ch" + i);
-  const hold = Math.min(2.9, c.t1 - c.t0 - 0.25);
+  const hold = Math.min(c.num === "" ? 1.9 : 2.9, c.t1 - c.t0 - 0.25);   // 「全部零件」「爆炸图」不是拆解步骤，标题停短一点
   const sc = q("chs" + i);
   tl.fromTo(sc, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.out" }, c.t0);
   tl.to(sc, { opacity: 0, duration: 0.5, ease: "power1.in" }, c.t0 + hold);
@@ -454,7 +457,7 @@ steps.forEach((c, i) => {
 });
 tl.to(pg, { opacity: 0, duration: 0.5 }, steps[steps.length - 1].t1 - 0.2);
 // 片尾压黑
-tl.fromTo("#blackout", { opacity: 0 }, { opacity: 1, duration: 1.3, ease: "power1.in" }, D.dur - 1.35);
+tl.fromTo("#blackout", { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "power1.inOut" }, D.dur - 2.3);
 window.__timelines["main"] = tl;
 """
 
@@ -473,8 +476,8 @@ page = f"""<!doctype html>
   <audio id="music" src="assets/music.m4a" data-start="0" data-duration="{DUR}" data-track-index="2" data-volume="1"></audio>
   <div id="ov" class="clip" data-start="0" data-duration="{DUR}" data-track-index="1">
     <div class="vig"></div>
-{body}
     <div class="blackout" id="blackout"></div>
+{body}
   </div>
 </div>
 <script>{JS.replace("__DATA__", json.dumps(DATA, ensure_ascii=False))}</script>
