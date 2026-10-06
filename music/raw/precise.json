@@ -1,0 +1,50 @@
+{
+  "task_id": "1314395707990089729",
+  "action": "MUSIC",
+  "status": "SUCCESS",
+  "fail_reason": "",
+  "submit_time": 1791305957,
+  "start_time": 1791305964,
+  "finish_time": 1791306011,
+  "progress": "100%",
+  "data": [
+    {
+      "id": "2107516052077297666",
+      "tags": "minimal cinematic electronic, precise ticking percussion, warm analog synth arpeggios, deep sub bass, glassy plucks, soft piano motif, modern tech product launch, clean, elegant, inspiring, 120 BPM, instrumental",
+      "title": "Inside, Part by Part",
+      "clipId": "c28d4a33-e90b-4e68-b080-ae0951b5a4c9",
+      "prompt": "",
+      "status": 30,
+      "waitNum": 0,
+      "duration": 123.2,
+      "progress": 100,
+      "inputType": "20",
+      "createTime": "2026-10-07T00:59:17.000+08:00",
+      "progressMsg": "Production completed",
+      "cld2AudioUrl": "https://file.lloongai.com/temp/suno/dl/d5/2026/10/07/20261007005942A357.m4a",
+      "cld2ImageUrl": "https://cdn2.suno.ai/image_c28d4a33-e90b-4e68-b080-ae0951b5a4c9.jpeg",
+      "cld2VideoUrl": "",
+      "continueClipId": "",
+      "makeInstrumental": true
+    },
+    {
+      "id": "2107516052077297667",
+      "tags": "minimal cinematic electronic, precise ticking percussion, warm analog synth arpeggios, deep sub bass, glassy plucks, soft piano motif, modern tech product launch, clean, elegant, inspiring, 120 BPM, instrumental",
+      "title": "Inside, Part by Part",
+      "clipId": "b8581649-c54e-4932-8cd8-7290ccc5ea25",
+      "prompt": "",
+      "status": 30,
+      "waitNum": 0,
+      "duration": 139.92,
+      "progress": 100,
+      "inputType": "20",
+      "createTime": "2026-10-07T00:59:17.000+08:00",
+      "progressMsg": "Production completed",
+      "cld2AudioUrl": "https://file.lloongai.com/temp/suno/dl/d5/2026/10/07/20261007005956A364.m4a",
+      "cld2ImageUrl": "https://cdn2.suno.ai/image_b8581649-c54e-4932-8cd8-7290ccc5ea25.jpeg",
+      "cld2VideoUrl": "",
+      "continueClipId": "",
+      "makeInstrumental": true
+    }
+  ]
+}

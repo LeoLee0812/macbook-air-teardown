@@ -1,0 +1,11 @@
+.venv/
+render/
+logs/
+music/raw/*.wav
+music/bed.wav
+blender/*.blend
+blender/*.blend1
+__pycache__/
+*.pyc
+blender/tex/
+music/raw/*.mp3

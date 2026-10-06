@@ -1,0 +1,50 @@
+{
+  "task_id": "1314395712364748800",
+  "action": "MUSIC",
+  "status": "SUCCESS",
+  "fail_reason": "",
+  "submit_time": 1791305958,
+  "start_time": 1791305964,
+  "finish_time": 1791306027,
+  "progress": "100%",
+  "data": [
+    {
+      "createTime": "2026-10-07T00:59:18.000+08:00",
+      "id": "2107516056426790914",
+      "inputType": "20",
+      "makeInstrumental": true,
+      "prompt": "",
+      "title": "Inside, Part by Part",
+      "tags": "ambient electronica, crystalline mallets, pulsing synth bass, delicate glitch percussion, felt piano, cinematic swells, futuristic design film, calm confidence, 118 BPM, instrumental",
+      "duration": 183.6,
+      "progress": 100,
+      "waitNum": 0,
+      "continueClipId": "",
+      "status": 30,
+      "cld2AudioUrl": "https://file.lloongai.com/temp/suno/dl/d5/2026/10/07/20261007010007A358.m4a",
+      "cld2ImageUrl": "https://cdn2.suno.ai/image_ee4cfe97-b39c-44fa-9127-62f49a00fa32.jpeg",
+      "progressMsg": "Production completed",
+      "cld2VideoUrl": "",
+      "clipId": "ee4cfe97-b39c-44fa-9127-62f49a00fa32"
+    },
+    {
+      "createTime": "2026-10-07T00:59:18.000+08:00",
+      "id": "2107516056426790915",
+      "inputType": "20",
+      "makeInstrumental": true,
+      "prompt": "",
+      "title": "Inside, Part by Part",
+      "tags": "ambient electronica, crystalline mallets, pulsing synth bass, delicate glitch percussion, felt piano, cinematic swells, futuristic design film, calm confidence, 118 BPM, instrumental",
+      "duration": 183.56,
+      "progress": 100,
+      "waitNum": 0,
+      "continueClipId": "",
+      "status": 30,
+      "cld2AudioUrl": "https://file.lloongai.com/temp/suno/dl/d5/2026/10/07/20261007005944A346.m4a",
+      "cld2ImageUrl": "https://cdn2.suno.ai/image_3630dbd3-0cd2-4935-bdd4-b76ae5997ad9.jpeg",
+      "progressMsg": "Production completed",
+      "cld2VideoUrl": "",
+      "clipId": "3630dbd3-0cd2-4935-bdd4-b76ae5997ad9"
+    }
+  ]
+}
