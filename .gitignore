@@ -9,3 +9,10 @@ __pycache__/
 *.pyc
 blender/tex/
 music/raw/*.mp3
+video/assets/fonts/src/
+video/assets/teardown.mp4
+video/snapshots/
+video/renders/
+tts/**/*.wav
+tts/probe/
+*.log

@@ -145,7 +145,7 @@ def build(P, ANCH, cam, tgt, LIGHTS, M):
     cr.cut(b(2), (0.40, -0.44, 0.24), (0.0, 0.0, 0.004), lens=50, fstop=5.6)
     cr.move(b(2), b(5), (0.10, -0.56, 0.19), (0.0, 0.0, 0.004), ease="sine", arc=True)
     cr.move(b(5), b(7) - 1 / FPS, (0.52, -0.36, 0.03), (0.0, -0.02, 0.005), lens=90, fstop=8.0, ease="sine")
-    text("title", b(2) + 0.25, b(5) - 0.2, "拆开一台 MacBook Air", "13 英寸 · M5 · 每一个零件", "left")
+    text("title", b(2) + 0.25, b(5) - 0.2, "拆开一台 MacBook Air", "13 英寸 · M5", "left")
     text("stat", b(5) + 0.4, b(7) - 0.15, "1.13 cm", "厚度 · 重 1.23 kg", "right")
 
     # ================================================================ C 翻面 + 拧螺丝  B7 → B12
@@ -201,7 +201,7 @@ def build(P, ANCH, cam, tgt, LIGHTS, M):
     plug = P["batplug"]
     KL(plug, b(15.6), (0, 0, 0), "back_out")
     KL(plug, b(15.95), fw(dz=0.0028), "bez")
-    callout("batcover", b(14.6), b(16) - 0.1, "第一步：断开电池", "拆下盖板（2 颗螺丝）→ 拔掉电池排线", dx=230, dy=-120)
+    callout("batcover", b(14.6), b(16) - 0.1, "第一步：断开电池", "拆下盖板（2 颗螺丝），拔掉电池排线", dx=230, dy=-120)
 
     # ================================================================ E 电池  B16 → B21
     cr.move(b(16), b(16.8), (0.0, -0.31, 0.21), (0.0, -0.025, -0.003), lens=40, fstop=8, ease="cubic")
@@ -211,7 +211,7 @@ def build(P, ANCH, cam, tgt, LIGHTS, M):
         ta = P[f"pulltab_{k}"]
         tp = b(16.8) + k * BEAT / 2
         fly(ta, tp, tp + 0.9, (0, 0, 0), fw(dy=-0.09, dz=0.014), ease="cubic")
-    callout("pulltab", b(16.85), b(18.6), "易拉胶 ×4", "拉片都在前沿，抽出即可松开", dx=-240, dy=-150)
+    callout("pulltab", b(16.85), b(18.6), "易拉胶 ×4", "拉片在前沿，抽出即松开", dx=-240, dy=-150)
     for k in range(4):
         s = P[f"trs{k}"]
         ts = b(18) + k * 0.12
@@ -225,7 +225,7 @@ def build(P, ANCH, cam, tgt, LIGHTS, M):
     KR(bat, b(20.6), (-0.30, 0.0, 0.10), "bez")
     cr.move(b(18.8), b(20.6), (0.05, -0.32, 0.27), (0.0, -0.025, 0.035), ease="sine")
     callout("cell_WL", b(19.3), b(20.7), "4 块电芯 · Π 形排布", "粘在金属托盘上，整件更换", dx=-250, dy=-140)
-    text("stat", b(19.0), b(20.8), "53.8 Wh", "锂聚合物电池 · 最长 18 小时视频播放", "right")
+    text("stat", b(19.0), b(20.8), "53.8 Wh", "锂聚合物电池 · 最长 18 小时", "right")
     fly(bat, b(20.6), b(21) - 0.03, fw(dz=0.045), fw(dy=0.05, dz=0.5), (-0.30, 0, 0.10), (-0.30, 0, 0.10), ease="cubic_in")
 
     # ================================================================ F 触控板  B21 → B24
@@ -250,8 +250,8 @@ def build(P, ANCH, cam, tgt, LIGHTS, M):
             KL(ob, tk - 0.02, (0, 0, 0), "quad_out")
             KL(ob, tk + 0.05, (0, 0, -0.0007), "quad")
             KL(ob, tk + 0.2, (0, 0, 0), "bez")
-    callout("taptic", b(22.8), b(23.85), "触感引擎 Taptic Engine", "模拟按下去的「咔哒」反馈", dx=230, dy=-120)
-    callout("tp_block", b(23.0), b(23.85), "压力感应 Force Touch", "按得多重，它都知道", dx=-240, dy=110)
+    callout("taptic", b(22.8), b(23.85), "触感引擎", "Taptic Engine · 模拟按压的反馈", dx=230, dy=-120)
+    callout("tp_block", b(23.0), b(23.85), "压力感应", "Force Touch：按多重都知道", dx=-240, dy=110)
     fly(tp, b(23.8), b(24) - 0.03, fw(dz=0.035), fw(dy=-0.08, dz=0.40), (0.22, 0, 0.10), (0.22, 0, 0.10), ease="cubic_in")
 
     # ================================================================ G 雷雳 4 接口板  B24 → B26
@@ -270,7 +270,7 @@ def build(P, ANCH, cam, tgt, LIGHTS, M):
         KR(u, t0 + 1.2, (0.0, 0.35, 0.0), "bez")
         fly(u, b(25.7) + k * 0.06, b(26) - 0.02, fw(dx=0.018, dz=0.018 + 0.006 * k), fw(dx=0.05, dz=0.30), (0, 0.35, 0),
             (0, 0.35, 0), ease="cubic_in")
-    callout("usbc0", b(24.65), b(25.9), "雷雳 4（USB-C）×2", "40Gb/s · 每个接口一块独立小板", dx=-250, dy=-120)
+    callout("usbc0", b(24.65), b(25.9), "雷雳 4 接口 ×2", "40Gb/s · 每个口一块独立小板", dx=-250, dy=-120)
 
     # ================================================================ H 铰链盖 + MagSafe 3  B26 → B27
     cr.move(b(26), b(26) + 0.4, (0.26, 0.0, 0.15), (0.14, 0.082, 0.006), ease="cubic")
@@ -289,7 +289,7 @@ def build(P, ANCH, cam, tgt, LIGHTS, M):
     KL(ms, b(26) + 0.6, (0, 0, 0), "quart_out")
     KL(ms, b(26) + 1.0, fw(dx=0.012, dz=0.02), "bez")
     fly(ms, b(26.85), b(27) - 0.02, fw(dx=0.012, dz=0.02), fw(dx=0.04, dz=0.30), ease="cubic_in")
-    callout("magsafe", b(26) + 0.6, b(27) - 0.05, "MagSafe 3 磁吸充电口", "先拆左侧铰链盖", dx=-260, dy=-110)
+    callout("magsafe", b(26) + 0.6, b(27) - 0.05, "MagSafe 3", "先拆左侧铰链盖", dx=-260, dy=-110)
 
     # ================================================================ I 扬声器 + 天线  B27 → B29（低频抽空，55.40s 一记重击）
     cr.move(b(27), b(27) + 0.5, (0.0, -0.03, 0.27), (0.0, 0.088, -0.003), lens=38, fstop=8, ease="cubic")
@@ -310,8 +310,8 @@ def build(P, ANCH, cam, tgt, LIGHTS, M):
         KR(sp, hit + 0.45, (0, 0, 0.18 * sgn), "bez")
         fly(sp, b(28.75), b(29) - 0.02, fw(dz=0.028), fw(dx=-0.30 * sgn, dz=0.05), (0, 0, 0.18 * sgn), (0, 0, 0.18 * sgn),
             ease="cubic_in")
-    callout("speaker_L", b(27.6), b(28.9), "四扬声器 · 杜比全景声", "声音从屏幕和机身之间的缝隙出来", dx=-260, dy=120)
-    callout("speaker_R_ant", hit, b(28.9), "天线集成在扬声器模块里", "左右成对 · 同轴线接主板", dx=200, dy=120)
+    callout("speaker_L", b(27.6), b(28.9), "四扬声器 · 杜比全景声", "声音从屏幕与机身的缝隙传出", dx=-260, dy=120)
+    callout("speaker_R_ant", hit, b(28.9), "天线就在扬声器模块里", "左右成对，同轴线接主板", dx=200, dy=120)
 
     # ================================================================ J 主板 · M5  B29 → B35
     cr.move(b(29), b(29) + 0.6, (0.0, -0.06, 0.23), (-0.005, 0.067, -0.003), lens=40, fstop=8, ease="cubic")
@@ -340,8 +340,8 @@ def build(P, ANCH, cam, tgt, LIGHTS, M):
     cr.move(b(30.5), b(31.5), (-0.03, 0.0, 0.17), (-0.07, 0.067, 0.02), lens=45, ease="cubic")
     cr.move(b(31.5), b(32.5), (-0.068, 0.03, 0.10), (-0.098, 0.067, 0.024), lens=60, fstop=4.0, ease="cubic")
     cr.move(b(32.5), b(33.5), (-0.074, 0.028, 0.095), (-0.095, 0.068, 0.024), ease="sine")
-    cr.move(b(33.5), b(34.5), (-0.01, 0.02, 0.125), (-0.035, 0.07, 0.024), lens=45, fstop=5.6, ease="cubic")
-    callout("thermal", b(31.4), b(32.45), "热模块 · 与主板一体", "无风扇，0 噪音运行", dx=230, dy=-120)
+    cr.move(b(33.5), b(34.5), (0.0, 0.005, 0.17), (-0.02, 0.07, 0.024), lens=45, fstop=6.3, ease="cubic")
+    callout("thermal", b(31.4), b(32.45), "热模块 · 与主板一体", "无风扇，安静无声", dx=230, dy=-120)
     callout("soc", b(32.45), b(33.6), "M5 芯片", "10 核 CPU · 最高 10 核 GPU", dx=-250, dy=-120)
     callout("mem", b(32.8), b(33.6), "统一内存 16GB 起", "带宽 153GB/s", dx=240, dy=110)
     callout("nand", b(33.7), b(34.6), "固态硬盘 512GB 起", "", dx=-220, dy=-110)
@@ -360,8 +360,8 @@ def build(P, ANCH, cam, tgt, LIGHTS, M):
     KL(af, b(35.75), (0, 0, 0), "quart_out")
     KL(af, b(36.25), fw(dx=-0.008, dz=0.012), "bez")
     fly(af, b(36.75), b(37) - 0.02, fw(dx=-0.008, dz=0.012), fw(dx=-0.05, dz=0.3), ease="cubic_in")
-    callout("touchidboard", b(35.4), b(36.8), "触控 ID 小板", "压在主板下层 · 与主板配对", dx=240, dy=-110)
-    callout("jack", b(35.9), b(36.9), "3.5 mm 耳机孔", "在音频/传感器排线上 · 支持高阻抗耳机", dx=200, dy=110)
+    callout("touchidboard", b(35.4), b(36.8), "触控 ID 小板", "与主板配对", dx=240, dy=-110)
+    callout("jack", b(35.9), b(36.9), "3.5 mm 耳机孔", "支持高阻抗耳机", dx=200, dy=110)
     callout("lid_sensor", b(36.1), b(36.9), "开合角度传感器", "", dx=-200, dy=-100)
 
     # ================================================================ L 显示屏  B37 → B43
@@ -409,7 +409,7 @@ def build(P, ANCH, cam, tgt, LIGHTS, M):
     TL.set(kb, "default_value", b(45), 1.6, "bez")
     callout("keyboard", b(44), b(45.9), "妙控键盘 · 背光", "剪刀式结构 · 78 键", dx=-240, dy=-130)
     callout("fnrow", b(44.5), b(45.9), "12 个全高功能键", "", dx=200, dy=-120)
-    callout("touchid", b(46), b(46.95), "触控 ID", "藏在电源键里", dx=-220, dy=-110)
+    callout("touchid", b(46), b(46.95), "触控 ID", "就在电源键里", dx=-220, dy=-110)
     text("note", b(45.9), b(46.95), "键盘与顶壳一体", "换键盘要换整个顶壳", "left")
 
     # ================================================================ N 全部零件平铺  B47 → B53
@@ -438,6 +438,7 @@ def build(P, ANCH, cam, tgt, LIGHTS, M):
         KR(o, t_in + 0.75, tuple(rot), "bez")
         OVER["knoll"].append(dict(part=name, t0=round(t_in + 0.45, 3), t1=round(b(53) - 0.05, 3)))
     TL.set(sp, "default_value", b(47), 1.0, "const")
+    OVER["knoll"].insert(0, dict(part="topcase", t0=round(b(47) + 0.35, 3), t1=round(b(53) - 0.05, 3)))
     chapter("", "全部零件", "ALL PARTS", b(47), b(53))
 
     # ================================================================ O 爆炸图  B53 → B59

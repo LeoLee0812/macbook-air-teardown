@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1920, height=1080" />
+<script src="assets/vendor/gsap.min.js"></script>
+<style>
+@font-face { font-family: "Noto Serif SC"; src: url("assets/fonts/NotoSerifSC-sub.woff2") format("woff2"); font-weight: 200 900; }
+@font-face { font-family: "Noto Sans SC"; src: url("assets/fonts/NotoSansSC-sub.woff2") format("woff2"); font-weight: 100 900; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1920px; height: 1080px; overflow: hidden; background: #07090c; }
+#root { position: relative; width: 100%; height: 100%; overflow: hidden; background: #07090c;
+  font-family: "Noto Sans SC", sans-serif; color: #F4F2EE; }
+#teardown { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#ov { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.vig { position: absolute; inset: 0; background: radial-gradient(ellipse 75% 70% at 50% 48%, rgba(0,0,0,0) 62%, rgba(2,3,5,0.42) 100%); }
+.co, .kn { position: absolute; left: 0; top: 0; width: 0; height: 0; opacity: 0; }
+.co-svg { position: absolute; left: 0; top: 0; overflow: visible; }
+.co-line { fill: none; stroke: #8CC8F2; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+  filter: drop-shadow(0 0 6px rgba(0,0,0,0.7)); }
+.co-dot { position: absolute; left: -6px; top: -6px; width: 12px; height: 12px; border-radius: 50%; background: #8CC8F2;
+  box-shadow: 0 0 0 3px rgba(7,9,12,0.55), 0 0 18px rgba(140,200,242,0.75); }
+.co-ring { position: absolute; left: -17px; top: -17px; width: 34px; height: 34px; border-radius: 50%;
+  border: 2px solid #8CC8F2; opacity: 0.0; }
+.co-lab { position: absolute; white-space: nowrap; }
+.co-r { text-align: left; }
+.co-l { text-align: right; }
+.co-t { font-size: 36px; font-weight: 600; letter-spacing: 0.01em; line-height: 1.25;
+  text-shadow: 0 2px 18px rgba(0,0,0,0.85), 0 0 3px rgba(0,0,0,0.6); }
+.co-s { font-size: 25px; font-weight: 400; color: #AEB6BE; line-height: 1.35; margin-top: 4px;
+  text-shadow: 0 2px 14px rgba(0,0,0,0.9); }
+.ex .co-t { font-size: 32px; }
+.kn-tick { position: absolute; left: -1px; width: 2px; background: #8CC8F2; opacity: 0.85; }
+.kn-lab { position: absolute; left: -240px; width: 480px; text-align: center; white-space: nowrap; font-size: 24px; font-weight: 500;
+  color: #F4F2EE; text-shadow: 0 2px 12px rgba(0,0,0,0.9); }
+.card { position: absolute; left: 118px; top: 104px; opacity: 0; }
+.card-rule { width: 72px; height: 3px; background: #8CC8F2; margin-bottom: 22px; transform-origin: left center; }
+.card-t { font-family: "Noto Serif SC", serif; font-weight: 900; font-size: 104px; line-height: 1.05; letter-spacing: 0.02em;
+  text-shadow: 0 4px 30px rgba(0,0,0,0.6); }
+.tx { position: absolute; opacity: 0; }
+.tx-title { left: 118px; top: 112px; }
+.tt-main { font-family: "Noto Serif SC", serif; font-weight: 900; font-size: 112px; line-height: 1.12; letter-spacing: 0.01em;
+  text-shadow: 0 4px 34px rgba(0,0,0,0.65); }
+.tt-sub { margin-top: 22px; font-size: 38px; font-weight: 400; color: #AEB6BE; letter-spacing: 0.06em; }
+.tx-stat { right: 130px; top: 380px; text-align: right; }
+.st-row { display: flex; align-items: baseline; justify-content: flex-end; gap: 14px; }
+.st-num { font-family: "IBM Plex Mono", monospace; font-weight: 700; font-size: 132px; line-height: 1; letter-spacing: -0.03em;
+  text-shadow: 0 4px 30px rgba(0,0,0,0.6); }
+.st-unit { font-family: "Noto Sans SC", "IBM Plex Mono", sans-serif; font-weight: 500; font-size: 48px; color: #8CC8F2; }
+.st-sub { margin-top: 16px; font-size: 32px; color: #AEB6BE; text-shadow: 0 2px 14px rgba(0,0,0,0.9); }
+.tx-note { left: 118px; bottom: 120px; }
+.tx-note-c { left: 0; right: 0; top: 470px; text-align: center; }
+.nt-main { font-size: 46px; font-weight: 600; text-shadow: 0 2px 18px rgba(0,0,0,0.85); }
+.tx-note-c .nt-main { font-family: "Noto Serif SC", serif; font-weight: 900; font-size: 96px; letter-spacing: 0.08em; }
+.nt-sub { margin-top: 8px; font-size: 30px; color: #AEB6BE; text-shadow: 0 2px 14px rgba(0,0,0,0.9); }
+.tx-end { left: 0; right: 0; top: 168px; text-align: center; }
+.en-main { font-family: "Noto Serif SC", serif; font-weight: 900; font-size: 124px; letter-spacing: 0.02em;
+  text-shadow: 0 4px 40px rgba(0,0,0,0.7); }
+.en-sub { margin-top: 14px; font-size: 38px; color: #AEB6BE; letter-spacing: 0.12em; }
+.tx-disc { left: 0; right: 0; bottom: 64px; text-align: center; font-size: 22px; color: #8D949B; letter-spacing: 0.04em; }
+.pg { position: absolute; left: 50%; bottom: 46px; width: 420px; margin-left: -210px; height: 4px; display: flex; gap: 8px; opacity: 0; }
+.pg-seg { flex: 1; height: 4px; background: rgba(255,255,255,0.16); border-radius: 2px; overflow: hidden; }
+.pg-fill { width: 100%; height: 100%; background: #8CC8F2; transform-origin: left center; }
+.blackout { position: absolute; inset: 0; background: #000; opacity: 0; }
+.scrim { position: absolute; pointer-events: none; opacity: 0;
+  background: radial-gradient(ellipse at center, rgba(4,6,9,0.62) 0%, rgba(4,6,9,0.38) 42%, rgba(4,6,9,0) 72%); }
+.scrim-tl { left: -260px; top: -160px; width: 1500px; height: 720px; }
+.scrim-r { right: -280px; top: 230px; width: 1200px; height: 560px; }
+.scrim-bl { left: -260px; bottom: -200px; width: 1500px; height: 560px; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="123.21" data-width="1920" data-height="1080">
+  <video id="teardown" class="clip" src="assets/teardown.mp4" muted playsinline data-start="0" data-duration="123.21" data-track-index="0"></video>
+  <audio id="music" src="assets/music.m4a" data-start="0" data-duration="123.21" data-track-index="2" data-volume="1"></audio>
+  <div id="ov" class="clip" data-start="0" data-duration="123.21" data-track-index="1">
+    <div class="vig"></div>
+<div class="co" id="co0">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 109,-130 260,-130" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-r" style="left:274px;top:-156px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>五角螺丝</div><div class="co-s">P5 · 前后角各 2 颗</div></div>
+</div>
+<div class="co" id="co1">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 -109,90 -260,90" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-l" style="right:274px;top:64px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>电池</div></div>
+</div>
+<div class="co" id="co2">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 -97,-120 -230,-120" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-l" style="right:244px;top:-146px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>主板</div></div>
+</div>
+<div class="co" id="co3">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 92,-110 220,-110" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-r" style="left:234px;top:-136px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>触控板</div></div>
+</div>
+<div class="co" id="co4">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 -84,130 -200,130" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-l" style="right:214px;top:104px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>扬声器 + 天线</div></div>
+</div>
+<div class="co" id="co5">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 -84,60 -200,60" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-l" style="right:214px;top:34px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>雷雳 4 接口</div></div>
+</div>
+<div class="co" id="co7">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 97,120 230,120" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-r" style="left:244px;top:94px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>第一步：断开电池</div><div class="co-s">拆下盖板（2 颗螺丝），拔掉电池排线</div></div>
+</div>
+<div class="co" id="co8">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 -101,-150 -240,-150" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-l" style="right:254px;top:-176px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>易拉胶 ×4</div><div class="co-s">拉片在前沿，抽出即松开</div></div>
+</div>
+<div class="co" id="co9">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 84,-100 200,-100" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-r" style="left:214px;top:-126px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>托盘螺丝 ×4</div></div>
+</div>
+<div class="co" id="co10">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 -105,140 -250,140" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-l" style="right:264px;top:114px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>4 块电芯 · Π 形排布</div><div class="co-s">粘在金属托盘上，整件更换</div></div>
+</div>
+<div class="co" id="co11">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 97,-120 230,-120" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-r" style="left:244px;top:-146px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>触感引擎</div><div class="co-s">Taptic Engine · 模拟按压的反馈</div></div>
+</div>
+<div class="co" id="co12">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 101,110 240,110" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-r" style="left:254px;top:84px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>压力感应</div><div class="co-s">Force Touch：按多重都知道</div></div>
+</div>
+<div class="co" id="co13">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 -105,120 -250,120" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-l" style="right:264px;top:94px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>雷雳 4 接口 ×2</div><div class="co-s">40Gb/s · 每个口一块独立小板</div></div>
+</div>
+<div class="co" id="co14">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 109,-110 260,-110" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-r" style="left:274px;top:-136px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>MagSafe 3</div><div class="co-s">先拆左侧铰链盖</div></div>
+</div>
+<div class="co" id="co15">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 -109,120 -260,120" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-l" style="right:274px;top:94px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>四扬声器 · 杜比全景声</div><div class="co-s">声音从屏幕与机身的缝隙传出</div></div>
+</div>
+<div class="co" id="co16">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 84,120 200,120" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-r" style="left:214px;top:94px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>天线就在扬声器模块里</div><div class="co-s">左右成对，同轴线接主板</div></div>
+</div>
+<div class="co" id="co17">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 -97,-120 -230,-120" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-l" style="right:244px;top:-146px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>主板 · 8 颗螺丝</div><div class="co-s">细长一条，横贯铰链一侧</div></div>
+</div>
+<div class="co" id="co18">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 -97,-120 -230,-120" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-l" style="right:244px;top:-146px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>热模块 · 与主板一体</div><div class="co-s">无风扇，安静无声</div></div>
+</div>
+<div class="co" id="co19">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 -105,-120 -250,-120" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-l" style="right:264px;top:-146px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>M5 芯片</div><div class="co-s">10 核 CPU · 最高 10 核 GPU</div></div>
+</div>
+<div class="co" id="co20">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 101,110 240,110" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-r" style="left:254px;top:84px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>统一内存 16GB 起</div><div class="co-s">带宽 153GB/s</div></div>
+</div>
+<div class="co" id="co21">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 92,-110 220,-110" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-r" style="left:234px;top:-136px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>固态硬盘 512GB 起</div></div>
+</div>
+<div class="co" id="co22">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 -92,-110 -220,-110" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-l" style="right:234px;top:-136px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>N1 无线芯片</div><div class="co-s">Wi-Fi 7 · 蓝牙 6</div></div>
+</div>
+<div class="co" id="co23">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 101,-110 240,-110" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-r" style="left:254px;top:-136px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>触控 ID 小板</div><div class="co-s">与主板配对</div></div>
+</div>
+<div class="co" id="co24">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 84,-110 200,-110" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-r" style="left:214px;top:-136px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>3.5 mm 耳机孔</div><div class="co-s">支持高阻抗耳机</div></div>
+</div>
+<div class="co" id="co25">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 -84,-100 -200,-100" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-l" style="right:214px;top:-126px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>开合角度传感器</div></div>
+</div>
+<div class="co" id="co26">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 -109,-130 -260,-130" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-l" style="right:274px;top:-156px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>13.6 英寸 Liquid Retina</div><div class="co-s">2560 × 1664 · 224 ppi</div></div>
+</div>
+<div class="co" id="co27">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 97,110 230,110" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-r" style="left:244px;top:84px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>1200 万像素人物居中摄像头</div><div class="co-s">支持桌上视角</div></div>
+</div>
+<div class="co" id="co28">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 101,-130 240,-130" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-r" style="left:254px;top:-156px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>妙控键盘 · 背光</div><div class="co-s">剪刀式结构 · 78 键</div></div>
+</div>
+<div class="co" id="co29">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 84,-120 200,-120" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-r" style="left:214px;top:-146px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>12 个全高功能键</div></div>
+</div>
+<div class="co" id="co30">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 -92,-110 -220,-110" /></svg>
+  <div class="co-dot"></div><div class="co-ring"></div>
+  <div class="co-lab co-l" style="right:234px;top:-136px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>触控 ID</div><div class="co-s">就在电源键里</div></div>
+</div>
+<div class="kn" id="kn_topcase"><div class="kn-lab" style="top:-16px;" data-layout-allow-overlap>顶壳 + 键盘</div></div>
+<div class="kn" id="kn_lid"><div class="kn-lab" style="top:-16px;" data-layout-allow-overlap>屏幕总成</div></div>
+<div class="kn" id="kn_bottomcase"><div class="kn-lab" style="top:-16px;" data-layout-allow-overlap>底壳</div></div>
+<div class="kn" id="kn_battery"><div class="kn-lab" style="top:-16px;" data-layout-allow-overlap>电池</div></div>
+<div class="kn" id="kn_logicboard"><div class="kn-lab" style="top:-16px;" data-layout-allow-overlap>主板</div></div>
+<div class="kn" id="kn_trackpad"><div class="kn-lab" style="top:-16px;" data-layout-allow-overlap>触控板</div></div>
+<div class="kn" id="kn_speaker_L"><div class="kn-lab" style="top:-16px;" data-layout-allow-overlap>扬声器 + 天线 ×2</div></div>
+<div class="kn" id="kn_usbc0"><div class="kn-lab" style="top:-16px;" data-layout-allow-overlap>雷雳 4 接口板 ×2</div></div>
+<div class="kn" id="kn_magsafe"><div class="kn-lab" style="top:-16px;" data-layout-allow-overlap>MagSafe 3 板</div></div>
+<div class="kn" id="kn_audioflex"><div class="kn-lab" style="top:-16px;" data-layout-allow-overlap>音频 / 传感器排线</div></div>
+<div class="kn" id="kn_touchidboard"><div class="kn-lab" style="top:-16px;" data-layout-allow-overlap>触控 ID 板</div></div>
+<div class="kn" id="kn_batcover"><div class="kn-lab" style="top:-16px;" data-layout-allow-overlap>电池盖板</div></div>
+<div class="kn" id="kn_hingecover0"><div class="kn-lab" style="top:-16px;" data-layout-allow-overlap>铰链盖 ×2</div></div>
+<div class="kn" id="kn_screw_b0"><div class="kn-lab" style="top:-16px;" data-layout-allow-overlap>五角螺丝 ×4</div></div>
+<div class="co ex" id="ex0">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 201,-30 366,-30" /></svg>
+  <div class="co-dot"></div>
+  <div class="co-lab co-r" style="left:380.0px;top:-54px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>屏幕总成</div></div>
+</div>
+<div class="co ex" id="ex1">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 -136,-30 -247,-30" /></svg>
+  <div class="co-dot"></div>
+  <div class="co-lab co-l" style="right:261.4px;top:-54px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>键帽</div></div>
+</div>
+<div class="co ex" id="ex2">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 -94,30 -170,30" /></svg>
+  <div class="co-dot"></div>
+  <div class="co-lab co-l" style="right:184.0px;top:6px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>顶壳</div></div>
+</div>
+<div class="co ex" id="ex3">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 94,-205 170,-205" /></svg>
+  <div class="co-dot"></div>
+  <div class="co-lab co-r" style="left:184.0px;top:-229px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>触控板</div></div>
+</div>
+<div class="co ex" id="ex4">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 -124,-13 -225,-13" /></svg>
+  <div class="co-dot"></div>
+  <div class="co-lab co-l" style="right:238.89999999999998px;top:-37px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>电池</div></div>
+</div>
+<div class="co ex" id="ex5">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 -106,-100 -194,-100" /></svg>
+  <div class="co-dot"></div>
+  <div class="co-lab co-l" style="right:207.60000000000002px;top:-124px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>主板</div></div>
+</div>
+<div class="co ex" id="ex6">
+  <svg class="co-svg" width="2" height="2" viewBox="0 0 2 2"><polyline class="co-line" points="0,0 102,30 185,30" /></svg>
+  <div class="co-dot"></div>
+  <div class="co-lab co-r" style="left:199.20000000000005px;top:6px;" data-layout-allow-overlap><div class="co-t" data-layout-allow-overlap>底壳</div></div>
+</div>
+<div class="scrim scrim-tl" id="chs0"></div>
+<div class="card" id="ch0"><div class="card-rule"></div><div class="card-t" data-layout-allow-overlap>底壳</div></div>
+<div class="scrim scrim-tl" id="chs1"></div>
+<div class="card" id="ch1"><div class="card-rule"></div><div class="card-t" data-layout-allow-overlap>电池</div></div>
+<div class="scrim scrim-tl" id="chs2"></div>
+<div class="card" id="ch2"><div class="card-rule"></div><div class="card-t" data-layout-allow-overlap>触控板</div></div>
+<div class="scrim scrim-tl" id="chs3"></div>
+<div class="card" id="ch3"><div class="card-rule"></div><div class="card-t" data-layout-allow-overlap>雷雳 4 接口板</div></div>
+<div class="scrim scrim-tl" id="chs4"></div>
+<div class="card" id="ch4"><div class="card-rule"></div><div class="card-t" data-layout-allow-overlap>MagSafe 3</div></div>
+<div class="scrim scrim-tl" id="chs5"></div>
+<div class="card" id="ch5"><div class="card-rule"></div><div class="card-t" data-layout-allow-overlap>扬声器与天线</div></div>
+<div class="scrim scrim-tl" id="chs6"></div>
+<div class="card" id="ch6"><div class="card-rule"></div><div class="card-t" data-layout-allow-overlap>主板</div></div>
+<div class="scrim scrim-tl" id="chs7"></div>
+<div class="card" id="ch7"><div class="card-rule"></div><div class="card-t" data-layout-allow-overlap>触控 ID 与耳机孔</div></div>
+<div class="scrim scrim-tl" id="chs8"></div>
+<div class="card" id="ch8"><div class="card-rule"></div><div class="card-t" data-layout-allow-overlap>显示屏</div></div>
+<div class="scrim scrim-tl" id="chs9"></div>
+<div class="card" id="ch9"><div class="card-rule"></div><div class="card-t" data-layout-allow-overlap>顶壳与键盘</div></div>
+<div class="scrim scrim-tl" id="chs10"></div>
+<div class="card" id="ch10"><div class="card-rule"></div><div class="card-t" data-layout-allow-overlap>全部零件</div></div>
+<div class="scrim scrim-tl" id="chs11"></div>
+<div class="card" id="ch11"><div class="card-rule"></div><div class="card-t" data-layout-allow-overlap>爆炸图</div></div>
+<div class="scrim scrim-tl" id="txs0"></div>
+<div class="tx tx-title" id="tx0"><div class="tt-main" data-layout-allow-overlap>拆开一台 MacBook Air</div><div class="tt-sub" data-layout-allow-overlap>13 英寸 · M5</div></div>
+<div class="scrim scrim-r" id="txs1"></div>
+<div class="tx tx-stat" id="tx1"><div class="st-row"><span class="st-num">1.13</span><span class="st-unit">cm</span></div><div class="st-sub" data-layout-allow-overlap>厚度 · 重 1.23 kg</div></div>
+<div class="scrim scrim-bl" id="txs2"></div>
+<div class="tx tx-note" id="tx2"><div class="nt-main" data-layout-allow-overlap>内侧还有 4 个卡扣</div><div class="nt-sub" data-layout-allow-overlap>用吸盘拉起底壳，抬起不超过 1 cm</div></div>
+<div class="tx tx-note-c" id="tx3"><div class="nt-main" data-layout-allow-overlap>打开底壳</div></div>
+<div class="scrim scrim-r" id="txs4"></div>
+<div class="tx tx-stat" id="tx4"><div class="st-row"><span class="st-num">53.8</span><span class="st-unit">Wh</span></div><div class="st-sub" data-layout-allow-overlap>锂聚合物电池 · 最长 18 小时</div></div>
+<div class="scrim scrim-bl" id="txs5"></div>
+<div class="tx tx-note" id="tx5"><div class="nt-main" data-layout-allow-overlap>10 颗螺丝固定</div></div>
+<div class="scrim scrim-r" id="txs6"></div>
+<div class="tx tx-stat" id="tx6"><div class="st-row"><span class="st-num">500</span><span class="st-unit">尼特</span></div><div class="st-sub" data-layout-allow-overlap>10 亿色 · P3 广色域</div></div>
+<div class="scrim scrim-bl" id="txs7"></div>
+<div class="tx tx-note" id="tx7"><div class="nt-main" data-layout-allow-overlap>铰链 6 颗螺丝 · 屏幕与摄像头各一根排线</div></div>
+<div class="scrim scrim-bl" id="txs8"></div>
+<div class="tx tx-note" id="tx8"><div class="nt-main" data-layout-allow-overlap>键盘与顶壳一体</div><div class="nt-sub" data-layout-allow-overlap>换键盘要换整个顶壳</div></div>
+<div class="tx tx-end" id="tx9"><div class="en-main" data-layout-allow-overlap>MacBook Air</div><div class="en-sub" data-layout-allow-overlap>13 英寸 · M5</div></div>
+<div class="tx tx-disc" id="tx10" data-layout-allow-overlap>3D 示意模型 · 内部布局依据 Apple 官方维修手册与公开拆解资料</div>
+<div class="pg" id="pg"><div class="pg-seg" id="pg0"><div class="pg-fill" id="pgf0"></div></div><div class="pg-seg" id="pg1"><div class="pg-fill" id="pgf1"></div></div><div class="pg-seg" id="pg2"><div class="pg-fill" id="pgf2"></div></div><div class="pg-seg" id="pg3"><div class="pg-fill" id="pgf3"></div></div><div class="pg-seg" id="pg4"><div class="pg-fill" id="pgf4"></div></div><div class="pg-seg" id="pg5"><div class="pg-fill" id="pgf5"></div></div><div class="pg-seg" id="pg6"><div class="pg-fill" id="pgf6"></div></div><div class="pg-seg" id="pg7"><div class="pg-fill" id="pgf7"></div></div><div class="pg-seg" id="pg8"><div class="pg-fill" id="pgf8"></div></div><div class="pg-seg" id="pg9"><div class="pg-fill" id="pgf9"></div></div></div>
+    <div class="blackout" id="blackout"></div>
+  </div>
+</div>
+<script>
+const D = {"callouts": [{"id": "co0", "t0": 17.333333333333332, "t1": 18.9, "xs": [1255.8, 1116.3, 1021.0, 973.6, 960.5, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0], "ys": [502.8, 500.0, 482.1, 461.8, 448.1, 439.9, 435.2, 433.0, 432.3, 432.1, 431.8, 431.6, 431.3, 431.0, 430.6, 430.3, 430.0, 429.6, 429.3, 429.1, 428.8, 428.6, 428.4, 428.3], "step": 0.06666666666666667}, {"id": "co1", "t0": 25.633333333333333, "t1": 27.533333333333335, "xs": [1262.3, 1262.4, 1262.4, 1262.6, 1262.7, 1262.9, 1263.2, 1263.5, 1263.8, 1264.2, 1264.6, 1265.0, 1265.5, 1265.9, 1266.4, 1266.8, 1267.3, 1267.8, 1268.2, 1268.7, 1269.1, 1269.5, 1269.9, 1270.2, 1270.5, 1270.7, 1270.9, 1271.1, 1271.2], "ys": [463.6, 463.6, 463.7, 463.7, 463.8, 464.0, 464.1, 464.3, 464.5, 464.7, 465.0, 465.2, 465.5, 465.7, 466.0, 466.3, 466.6, 466.9, 467.2, 467.4, 467.7, 467.9, 468.1, 468.3, 468.5, 468.6, 468.8, 468.9, 468.9], "step": 0.06666666666666667}, {"id": "co2", "t0": 25.866666666666667, "t1": 27.533333333333335, "xs": [1214.5, 1214.6, 1214.8, 1215.1, 1215.3, 1215.6, 1215.9, 1216.2, 1216.6, 1217.0, 1217.3, 1217.7, 1218.1, 1218.5, 1218.9, 1219.2, 1219.6, 1219.9, 1220.2, 1220.5, 1220.7, 1221.0, 1221.1, 1221.3, 1221.4, 1221.5], "ys": [342.6, 342.6, 342.6, 342.7, 342.7, 342.8, 342.8, 342.9, 343.0, 343.0, 343.1, 343.2, 343.3, 343.3, 343.4, 343.5, 343.5, 343.6, 343.7, 343.7, 343.8, 343.8, 343.8, 343.9, 343.9, 343.9], "step": 0.06666666666666667}, {"id": "co3", "t0": 26.133333333333333, "t1": 27.533333333333335, "xs": [811.4, 811.2, 811.0, 810.8, 810.5, 810.3, 810.1, 809.8, 809.6, 809.3, 809.1, 808.8, 808.6, 808.4, 808.2, 808.0, 807.8, 807.7, 807.5, 807.4, 807.4, 807.3], "ys": [897.6, 898.4, 899.3, 900.2, 901.2, 902.3, 903.3, 904.4, 905.6, 906.7, 907.7, 908.8, 909.8, 910.8, 911.6, 912.5, 913.2, 913.8, 914.3, 914.8, 915.1, 915.2], "step": 0.06666666666666667}, {"id": "co4", "t0": 26.366666666666667, "t1": 27.533333333333335, "xs": [648.4, 648.0, 647.6, 647.1, 646.7, 646.2, 645.8, 645.3, 644.9, 644.5, 644.1, 643.8, 643.5, 643.2, 643.0, 642.8, 642.6, 642.5], "ys": [197.4, 197.2, 197.1, 196.9, 196.8, 196.6, 196.5, 196.3, 196.2, 196.0, 195.9, 195.8, 195.7, 195.6, 195.5, 195.4, 195.4, 195.3], "step": 0.06666666666666667}, {"id": "co5", "t0": 26.6, "t1": 27.533333333333335, "xs": [1608.2, 1609.2, 1610.2, 1611.1, 1612.0, 1612.9, 1613.7, 1614.5, 1615.2, 1615.8, 1616.4, 1616.8, 1617.2, 1617.4, 1617.6], "ys": [321.9, 321.9, 321.9, 322.0, 322.0, 322.0, 322.1, 322.1, 322.1, 322.2, 322.2, 322.2, 322.2, 322.2, 322.2], "step": 0.06666666666666667}, {"id": "co7", "t0": 28.766666666666666, "t1": 30.466666666666665, "xs": [960.0, 960.0, 960.0, 960.0, 960.0, 960.1, 960.1, 960.1, 960.2, 960.2, 960.3, 960.3, 960.4, 960.5, 960.6, 960.7, 960.8, 961.0, 961.2, 961.5, 962.0, 962.8, 964.0, 965.9, 968.5, 972.2], "ys": [531.2, 531.2, 531.1, 531.0, 530.8, 530.6, 530.3, 530.0, 529.6, 529.2, 528.8, 528.3, 527.8, 527.3, 526.7, 526.1, 525.5, 524.4, 521.0, 512.9, 497.6, 472.4, 434.3, 379.8, 304.3, 202.0], "step": 0.06666666666666667}, {"id": "co8", "t0": 33.166666666666664, "t1": 36.56666666666667, "xs": [1575.9, 1575.9, 1575.8, 1575.7, 1575.6, 1575.5, 1575.3, 1575.1, 1574.9, 1574.6, 1574.4, 1574.1, 1573.8, 1573.4, 1573.0, 1572.6, 1572.2, 1571.8, 1571.3, 1570.8, 1570.3, 1569.8, 1569.2, 1568.6, 1568.0, 1567.4, 1566.8, 1566.2, 1565.5, 1564.8, 1564.1, 1563.4, 1562.8, 1562.1, 1561.4, 1560.7, 1560.0, 1559.3, 1558.6, 1557.9, 1557.3, 1556.7, 1556.1, 1555.5, 1554.9, 1554.4, 1553.9, 1553.4, 1553.0, 1552.6, 1552.3, 1552.0], "ys": [877.3, 877.5, 877.7, 878.0, 878.3, 878.8, 879.2, 879.8, 880.4, 881.1, 881.9, 882.7, 883.5, 884.4, 885.4, 886.4, 887.5, 888.6, 889.7, 890.9, 892.1, 893.4, 894.7, 895.9, 897.3, 898.6, 899.9, 901.3, 902.6, 903.9, 905.3, 906.6, 907.9, 909.2, 910.5, 911.7, 913.0, 914.2, 915.3, 916.4, 917.5, 918.5, 919.5, 920.4, 921.3, 922.2, 922.9, 923.6, 924.3, 924.9, 925.4, 925.8], "step": 0.06666666666666667}, {"id": "co9", "t0": 35.4, "t1": 36.333333333333336, "xs": [1339.3, 1347.2, 1388.5, 1329.8, 1396.7, 1282.0, 1320.2, 1344.3, 1345.8, 1346.5, 1347.5, 1349.5, 1354.3, 1366.9, 1404.3], "ys": [526.5, 526.8, 513.4, 455.3, 500.6, 468.9, 511.1, 514.9, 515.3, 513.9, 509.8, 498.1, 465.8, 374.8, 98.4], "step": 0.06666666666666667}, {"id": "co10", "t0": 37.93333333333333, "t1": 40.666666666666664, "xs": [1407.6, 1407.0, 1406.3, 1405.5, 1404.7, 1403.8, 1402.8, 1401.9, 1400.9, 1399.9, 1398.9, 1397.8, 1396.7, 1395.7, 1394.6, 1393.5, 1392.4, 1391.4, 1390.3, 1389.2, 1388.2, 1387.2, 1386.2, 1385.3, 1384.4, 1383.5, 1382.7, 1382.0, 1381.2, 1380.6, 1380.0, 1379.5, 1379.0, 1378.6, 1378.3, 1378.0, 1377.8, 1377.7, 1377.7, 1377.9, 1379.3, 1383.2], "ys": [207.3, 211.9, 217.0, 222.7, 228.7, 234.9, 241.2, 247.7, 254.2, 260.8, 267.4, 274.0, 280.6, 287.1, 293.6, 299.9, 306.2, 312.3, 318.3, 324.1, 329.8, 335.2, 340.4, 345.3, 350.0, 354.5, 358.7, 362.5, 366.1, 369.4, 372.3, 374.9, 377.2, 379.1, 380.7, 382.0, 382.8, 383.4, 383.6, 382.1, 371.8, 343.6], "step": 0.06666666666666667}, {"id": "co11", "t0": 44.766666666666666, "t1": 46.8, "xs": [710.1, 710.0, 709.9, 709.8, 709.8, 709.7, 709.6, 709.6, 709.6, 709.5, 709.5, 709.4, 709.3, 709.3, 709.2, 709.0, 708.9, 708.7, 708.6, 708.3, 708.1, 707.9, 707.6, 707.2, 706.9, 706.6, 706.3, 706.1, 705.9, 705.7, 704.3], "ys": [247.9, 251.2, 254.4, 257.7, 261.0, 264.2, 267.4, 270.6, 273.7, 276.7, 279.7, 282.6, 285.4, 288.2, 290.8, 293.3, 295.7, 297.9, 300.1, 302.1, 303.9, 305.6, 307.1, 308.5, 309.7, 310.9, 311.9, 312.8, 313.6, 314.3, 298.4], "step": 0.06666666666666667}, {"id": "co12", "t0": 45.166666666666664, "t1": 46.8, "xs": [268.1, 266.4, 264.8, 263.2, 261.7, 260.3, 259.0, 257.7, 256.6, 255.6, 254.7, 254.0, 253.4, 253.0, 252.8, 252.7, 252.7, 253.0, 253.4, 253.7, 254.1, 254.4, 254.7, 254.9, 248.1], "ys": [682.4, 682.0, 681.5, 681.0, 680.6, 680.2, 679.8, 679.6, 679.5, 679.5, 679.7, 680.1, 680.7, 681.5, 682.5, 683.8, 685.2, 687.0, 688.9, 690.7, 692.3, 693.8, 695.1, 696.2, 681.1], "step": 0.06666666666666667}, {"id": "co13", "t0": 48.36666666666667, "t1": 50.766666666666666, "xs": [1273.6, 1273.9, 1271.5, 1268.5, 1265.2, 1261.7, 1258.2, 1254.5, 1251.0, 1247.6, 1244.4, 1241.5, 1239.0, 1236.9, 1235.2, 1233.5, 1231.8, 1230.1, 1228.5, 1226.9, 1225.3, 1223.7, 1222.2, 1220.7, 1219.3, 1217.9, 1216.6, 1215.4, 1214.2, 1213.1, 1212.1, 1211.2, 1211.3, 1217.1, 1234.9, 1274.5, 1355.7], "ys": [677.0, 681.6, 686.9, 692.4, 698.1, 703.9, 709.5, 715.0, 720.4, 725.5, 730.5, 735.2, 739.8, 744.1, 748.3, 752.4, 756.6, 760.8, 764.9, 769.0, 773.0, 776.9, 780.8, 784.5, 788.1, 791.6, 794.9, 798.1, 801.0, 803.8, 806.4, 808.7, 806.3, 776.1, 686.2, 488.5, 84.6], "step": 0.06666666666666667}, {"id": "co14", "t0": 51.6, "t1": 52.8, "xs": [1004.1, 1059.9, 1093.3, 1109.6, 1115.4, 1116.2, 1115.5, 1114.8, 1114.0, 1113.2, 1112.3, 1111.5, 1110.8, 1110.0, 1109.4, 1108.8, 1108.2, 1114.9, 1173.5], "ys": [768.5, 725.8, 701.3, 690.6, 688.6, 690.8, 694.4, 698.3, 702.3, 706.4, 710.6, 714.7, 718.7, 722.5, 726.0, 729.1, 731.8, 688.0, 308.6], "step": 0.06666666666666667}, {"id": "co15", "t0": 54.13333333333333, "t1": 56.46666666666667, "xs": [1687.9, 1688.7, 1689.6, 1690.5, 1691.5, 1692.5, 1693.7, 1695.2, 1697.1, 1699.7, 1703.0, 1707.3, 1712.4, 1716.9, 1720.4, 1723.3, 1725.5, 1727.3, 1728.9, 1743.7, 1765.1, 1778.7, 1786.1, 1788.9, 1788.9, 1788.1, 1788.3, 1789.7, 1790.9, 1792.1, 1793.3, 1794.3, 1795.3, 1796.2, 1797.8, 1821.5], "ys": [476.1, 476.8, 477.5, 478.4, 479.3, 480.2, 481.1, 481.7, 481.9, 481.3, 479.9, 477.3, 473.7, 471.0, 469.6, 469.1, 469.3, 470.1, 471.2, 448.2, 412.1, 390.1, 380.0, 378.6, 382.4, 387.8, 391.0, 391.9, 392.7, 393.5, 394.3, 395.0, 395.6, 396.2, 396.7, 396.4], "step": 0.06666666666666667}, {"id": "co16", "t0": 55.4, "t1": 56.56666666666667, "xs": [402.8, 384.3, 371.9, 365.2, 362.9, 363.2, 364.3, 364.4, 363.5, 362.5, 361.7, 360.9, 360.1, 359.4, 358.8, 357.3, 333.9, 246.6], "ys": [460.5, 440.5, 428.4, 423.1, 422.8, 425.5, 429.0, 431.4, 432.3, 433.3, 434.1, 434.9, 435.7, 436.4, 437.0, 437.6, 437.3, 434.9], "step": 0.06666666666666667}, {"id": "co17", "t0": 58.03333333333333, "t1": 60.0, "xs": [1494.3, 1494.9, 1495.5, 1496.2, 1496.8, 1497.6, 1498.3, 1499.1, 1499.8, 1500.6, 1501.3, 1502.1, 1502.8, 1503.5, 1504.2, 1504.8, 1505.4, 1506.0, 1506.5, 1506.9, 1507.4, 1507.7, 1508.0, 1508.3, 1508.4, 1508.6, 1508.6, 1513.0, 1521.3, 1530.0], "ys": [653.9, 655.7, 657.7, 659.8, 662.0, 664.4, 666.8, 669.3, 671.9, 674.5, 677.1, 679.7, 682.3, 684.8, 687.3, 689.6, 691.9, 694.0, 696.0, 697.8, 699.4, 700.8, 702.0, 703.0, 703.7, 704.2, 704.5, 696.4, 681.7, 669.2], "step": 0.06666666666666667}, {"id": "co18", "t0": 61.53333333333333, "t1": 63.6, "xs": [813.7, 816.4, 817.4, 817.5, 817.5, 817.8, 818.5, 819.9, 822.2, 825.8, 830.9, 838.0, 847.6, 860.4, 877.4, 899.9, 929.7, 969.3, 1022.1, 1080.3, 1138.3, 1194.4, 1247.0, 1294.7, 1336.4, 1371.6, 1399.9, 1421.6, 1437.1, 1447.2, 1453.0, 1455.6], "ys": [296.7, 297.7, 298.1, 298.1, 298.1, 298.1, 298.1, 298.1, 298.1, 298.2, 298.3, 298.6, 299.1, 300.2, 302.0, 305.1, 310.2, 318.5, 331.8, 348.8, 367.9, 388.1, 408.4, 427.9, 445.8, 461.4, 474.3, 484.3, 491.6, 496.4, 499.1, 500.4], "step": 0.06666666666666667}, {"id": "co19", "t0": 63.6, "t1": 65.83333333333333, "xs": [959.6, 960.0, 959.9, 959.3, 958.1, 956.3, 953.9, 950.9, 947.4, 943.3, 938.8, 933.9, 928.5, 922.9, 916.9, 910.7, 904.4, 898.0, 891.7, 885.4, 879.3, 873.4, 867.8, 862.7, 858.0, 853.9, 850.4, 847.5, 845.3, 843.8, 843.0, 842.9, 841.7, 837.2], "ys": [559.4, 559.7, 559.7, 559.5, 559.1, 558.6, 557.9, 557.0, 556.1, 555.0, 553.9, 552.8, 551.7, 550.6, 549.5, 548.5, 547.7, 546.9, 546.2, 545.7, 545.3, 545.0, 544.8, 544.7, 544.7, 544.7, 544.8, 544.9, 544.9, 545.0, 545.0, 545.0, 544.5, 542.5], "step": 0.06666666666666667}, {"id": "co20", "t0": 64.26666666666667, "t1": 65.83333333333333, "xs": [687.9, 678.8, 669.0, 658.6, 647.7, 636.5, 625.0, 613.4, 601.9, 590.5, 579.5, 568.9, 559.0, 549.7, 541.4, 534.0, 527.7, 522.5, 518.6, 515.9, 514.6, 514.4, 513.4, 509.7], "ys": [175.8, 175.5, 175.4, 175.4, 175.5, 175.9, 176.4, 177.0, 177.9, 178.9, 180.0, 181.3, 182.6, 183.9, 185.2, 186.4, 187.5, 188.4, 189.1, 189.6, 189.9, 189.9, 189.7, 188.7], "step": 0.06666666666666667}, {"id": "co21", "t0": 66.2, "t1": 67.8, "xs": [1839.0, 1711.2, 1568.2, 1413.9, 1252.9, 1089.9, 929.8, 787.4, 682.4, 604.6, 546.6, 503.2, 470.7, 446.6, 428.8, 416.1, 407.3, 401.6, 398.1, 396.4, 395.8, 395.7, 395.7, 395.7, 395.7], "ys": [805.2, 752.6, 695.7, 637.1, 579.3, 524.9, 476.2, 437.4, 412.1, 395.5, 384.5, 377.2, 372.2, 368.9, 366.7, 365.2, 364.3, 363.7, 363.3, 363.1, 363.1, 363.1, 363.1, 363.1, 363.1], "step": 0.06666666666666667}, {"id": "co22", "t0": 66.96666666666667, "t1": 67.8, "xs": [1817.8, 1743.4, 1687.8, 1646.9, 1617.8, 1597.9, 1585.4, 1578.4, 1575.3, 1574.5, 1574.4, 1574.4, 1574.4], "ys": [796.2, 771.7, 753.8, 740.8, 731.6, 725.4, 721.6, 719.4, 718.4, 718.2, 718.2, 718.2, 718.2], "step": 0.06666666666666667}, {"id": "co23", "t0": 69.36666666666666, "t1": 72.03333333333333, "xs": [1153.0, 1154.3, 1155.4, 1156.2, 1156.9, 1157.4, 1157.8, 1158.2, 1158.6, 1159.0, 1159.4, 1159.8, 1160.2, 1160.7, 1161.2, 1161.6, 1162.2, 1162.7, 1163.2, 1163.7, 1164.3, 1164.8, 1165.3, 1165.9, 1166.4, 1166.9, 1167.5, 1168.0, 1168.5, 1169.0, 1169.4, 1169.9, 1170.3, 1170.8, 1171.2, 1171.5, 1172.1, 1173.8, 1178.0, 1186.3, 1201.1], "ys": [488.5, 471.3, 459.2, 451.2, 446.4, 444.2, 443.6, 444.2, 445.6, 447.3, 449.3, 451.3, 453.5, 455.7, 458.0, 460.4, 462.9, 465.4, 467.9, 470.6, 473.2, 475.9, 478.5, 481.2, 483.9, 486.6, 489.2, 491.8, 494.3, 496.8, 499.2, 501.5, 503.7, 505.9, 507.9, 509.8, 508.7, 489.8, 434.1, 317.9, 105.1], "step": 0.06666666666666667}, {"id": "co24", "t0": 70.33333333333333, "t1": 72.23333333333333, "xs": [471.0, 458.1, 449.0, 443.0, 439.4, 437.6, 437.0, 437.2, 437.9, 438.8, 439.8, 440.8, 441.7, 442.7, 443.6, 444.5, 445.4, 446.2, 447.1, 447.8, 448.6, 449.3, 449.9, 450.5, 451.1, 451.6, 447.4, 414.0, 308.1], "ys": [894.8, 894.3, 895.1, 897.0, 899.7, 903.2, 907.0, 911.1, 915.4, 919.8, 924.1, 928.4, 932.6, 936.7, 940.8, 944.7, 948.5, 952.2, 955.7, 959.0, 962.1, 965.1, 967.8, 970.3, 972.6, 974.6, 965.6, 888.6, 643.1], "step": 0.06666666666666667}, {"id": "co25", "t0": 70.73333333333333, "t1": 72.2, "xs": [709.2, 708.8, 708.8, 709.0, 709.3, 709.5, 709.7, 709.9, 710.2, 710.4, 710.6, 710.8, 711.1, 711.3, 711.5, 711.6, 711.8, 712.0, 712.1, 712.2, 709.4, 688.3, 623.0], "ys": [552.3, 555.5, 558.9, 562.4, 566.0, 569.5, 572.9, 576.3, 579.6, 582.8, 585.9, 588.9, 591.8, 594.5, 597.1, 599.5, 601.7, 603.8, 605.7, 607.3, 597.5, 516.4, 262.9], "step": 0.06666666666666667}, {"id": "co26", "t0": 75.6, "t1": 78.23333333333333, "xs": [1292.0, 1291.8, 1291.4, 1291.1, 1290.6, 1290.2, 1289.6, 1289.0, 1288.3, 1287.5, 1286.7, 1285.8, 1284.8, 1283.7, 1282.5, 1281.3, 1280.0, 1278.6, 1277.2, 1275.7, 1274.2, 1272.7, 1271.1, 1269.5, 1268.0, 1266.4, 1264.8, 1263.3, 1261.9, 1260.5, 1259.1, 1257.9, 1256.7, 1255.6, 1254.6, 1253.8, 1253.0, 1252.4, 1252.0, 1251.6], "ys": [286.0, 286.8, 287.6, 288.6, 289.6, 290.8, 292.1, 293.5, 295.0, 296.6, 298.3, 300.2, 302.1, 304.2, 306.4, 308.7, 311.1, 313.5, 316.0, 318.6, 321.3, 324.0, 326.7, 329.4, 332.1, 334.7, 337.4, 339.9, 342.4, 344.7, 347.0, 349.1, 351.1, 352.9, 354.5, 355.9, 357.1, 358.1, 358.9, 359.5], "step": 0.06666666666666667}, {"id": "co27", "t0": 79.4, "t1": 80.86666666666666, "xs": [960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0], "ys": [529.7, 539.6, 540.0, 540.0, 540.0, 540.0, 540.0, 540.0, 540.0, 540.0, 540.0, 540.0, 540.0, 540.0, 540.0, 540.0, 540.0, 540.0, 540.0, 540.0, 540.0, 540.0, 540.0], "step": 0.06666666666666667}, {"id": "co28", "t0": 86.13333333333334, "t1": 89.86666666666666, "xs": [787.7, 787.5, 786.9, 786.0, 784.7, 783.1, 781.1, 778.7, 776.0, 773.0, 769.6, 765.9, 761.9, 757.5, 752.9, 748.0, 742.8, 737.4, 731.8, 726.0, 720.0, 713.8, 707.5, 701.1, 694.6, 688.0, 681.4, 674.8, 668.2, 661.7, 655.2, 648.9, 642.6, 636.5, 630.5, 624.8, 619.2, 613.8, 608.7, 603.8, 599.1, 594.7, 590.6, 586.7, 583.0, 579.7, 576.6, 573.7, 571.1, 568.8, 566.7, 564.8, 563.2, 561.9, 560.8, 559.9, 559.2], "ys": [511.8, 511.8, 511.9, 511.9, 511.9, 512.0, 512.1, 512.1, 512.2, 512.2, 512.3, 512.3, 512.3, 512.3, 512.2, 512.1, 511.9, 511.7, 511.4, 511.1, 510.6, 510.1, 509.5, 508.9, 508.1, 507.3, 506.4, 505.4, 504.3, 503.1, 501.9, 500.6, 499.2, 497.8, 496.3, 494.8, 493.2, 491.6, 490.0, 488.4, 486.8, 485.3, 483.7, 482.2, 480.7, 479.3, 477.9, 476.6, 475.4, 474.3, 473.3, 472.3, 471.5, 470.8, 470.2, 469.7, 469.3], "step": 0.06666666666666667}, {"id": "co29", "t0": 87.13333333333334, "t1": 89.86666666666666, "xs": [575.0, 572.9, 570.8, 568.6, 566.4, 564.2, 561.9, 559.6, 557.3, 555.1, 552.8, 550.7, 548.5, 546.5, 544.5, 542.6, 540.8, 539.1, 537.6, 536.1, 534.8, 533.5, 532.4, 531.5, 530.6, 529.8, 529.2, 528.7, 528.2, 527.8, 527.6, 527.4, 527.2, 527.1, 527.1, 527.1, 527.1, 527.1, 527.1, 527.2, 527.2, 527.3], "ys": [424.5, 423.8, 423.0, 422.2, 421.3, 420.3, 419.3, 418.2, 417.0, 415.8, 414.5, 413.2, 411.8, 410.4, 408.9, 407.4, 405.8, 404.2, 402.7, 401.0, 399.4, 397.8, 396.2, 394.6, 393.1, 391.5, 390.0, 388.5, 387.1, 385.8, 384.5, 383.3, 382.1, 381.0, 380.0, 379.1, 378.3, 377.6, 377.0, 376.4, 376.0, 375.7], "step": 0.06666666666666667}, {"id": "co30", "t0": 90.03333333333333, "t1": 91.9, "xs": [1783.0, 1782.4, 1780.4, 1777.1, 1772.5, 1766.4, 1758.9, 1749.8, 1739.2, 1726.9, 1713.0, 1697.5, 1680.3, 1661.6, 1641.4, 1619.8, 1597.2, 1573.8, 1549.9, 1525.8, 1502.0, 1478.9, 1457.0, 1436.8, 1418.7, 1403.3, 1390.8, 1381.6, 1376.0], "ys": [482.8, 482.8, 482.9, 483.1, 483.2, 483.5, 483.8, 484.2, 484.6, 485.2, 485.8, 486.5, 487.3, 488.2, 489.2, 490.3, 491.4, 492.6, 493.8, 495.0, 496.3, 497.5, 498.6, 499.7, 500.6, 501.4, 502.1, 502.6, 502.9], "step": 0.06666666666666667}], "knoll": [{"id": "kn_topcase", "t0": 92.33333333333333, "t1": 103.66666666666667, "xs": [960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0, 960.0], "ys": [464.5, 464.5, 464.4, 464.4, 464.4, 464.3, 464.2, 464.1, 464.1, 464.0, 463.8, 463.7, 463.6, 463.5, 463.3, 463.2, 463.0, 462.9, 462.7, 462.5, 462.3, 462.2, 462.0, 461.8, 461.6, 461.4, 461.2, 461.0, 460.8, 460.6, 460.3, 460.1, 459.9, 459.7, 459.5, 459.3, 459.1, 458.9, 458.8, 458.6, 458.4, 458.2, 458.1, 457.9, 457.8, 457.6, 457.5, 457.4, 457.3, 457.2, 457.1, 457.0, 457.0, 456.9, 456.9, 456.9, 456.8], "step": 0.2}, {"id": "kn_lid", "t0": 92.6, "t1": 103.66666666666667, "xs": [393.5, 393.3, 392.9, 392.5, 392.0, 391.5, 390.8, 390.1, 389.4, 388.5, 387.6, 386.7, 385.7, 384.6, 383.5, 382.3, 381.1, 379.8, 378.4, 377.1, 375.7, 374.3, 372.8, 371.3, 369.8, 368.3, 366.7, 365.2, 363.6, 362.1, 360.5, 359.0, 357.5, 356.0, 354.5, 353.0, 351.6, 350.2, 348.9, 347.6, 346.3, 345.2, 344.0, 343.0, 342.0, 341.0, 340.2, 339.4, 338.7, 338.1, 337.6, 337.2, 336.8, 336.5, 336.4, 336.3], "ys": [464.5, 464.4, 464.4, 464.3, 464.3, 464.2, 464.1, 464.0, 463.9, 463.8, 463.7, 463.6, 463.4, 463.3, 463.1, 463.0, 462.8, 462.6, 462.5, 462.3, 462.1, 461.9, 461.7, 461.5, 461.3, 461.1, 460.9, 460.7, 460.5, 460.3, 460.1, 459.9, 459.7, 459.5, 459.3, 459.1, 458.9, 458.7, 458.5, 458.3, 458.2, 458.0, 457.9, 457.7, 457.6, 457.5, 457.4, 457.3, 457.2, 457.1, 457.0, 457.0, 456.9, 456.9, 456.8, 456.8], "step": 0.2}, {"id": "kn_bottomcase", "t0": 92.9, "t1": 103.66666666666667, "xs": [1526.9, 1527.3, 1527.7, 1528.2, 1528.8, 1529.5, 1530.2, 1531.0, 1531.9, 1532.8, 1533.8, 1534.9, 1536.0, 1537.1, 1538.3, 1539.6, 1540.9, 1542.2, 1543.6, 1545.0, 1546.5, 1548.0, 1549.4, 1551.0, 1552.5, 1554.0, 1555.6, 1557.2, 1558.7, 1560.2, 1561.8, 1563.3, 1564.8, 1566.3, 1567.7, 1569.1, 1570.5, 1571.8, 1573.0, 1574.3, 1575.4, 1576.5, 1577.5, 1578.5, 1579.4, 1580.2, 1580.9, 1581.6, 1582.2, 1582.6, 1583.0, 1583.3, 1583.6, 1583.7], "ys": [464.4, 464.4, 464.3, 464.2, 464.2, 464.1, 464.0, 463.9, 463.7, 463.6, 463.5, 463.4, 463.2, 463.1, 462.9, 462.7, 462.5, 462.4, 462.2, 462.0, 461.8, 461.6, 461.4, 461.2, 461.0, 460.8, 460.6, 460.4, 460.2, 460.0, 459.8, 459.6, 459.4, 459.2, 459.0, 458.8, 458.6, 458.4, 458.3, 458.1, 457.9, 457.8, 457.7, 457.5, 457.4, 457.3, 457.2, 457.1, 457.0, 457.0, 456.9, 456.9, 456.9, 456.8], "step": 0.2}, {"id": "kn_battery", "t0": 93.2, "t1": 103.66666666666667, "xs": [466.5, 466.1, 465.6, 465.0, 464.4, 463.8, 463.0, 462.3, 461.4, 460.5, 459.6, 458.6, 457.6, 456.5, 455.4, 454.3, 453.1, 451.9, 450.6, 449.3, 448.0, 446.7, 445.4, 444.1, 442.7, 441.4, 440.0, 438.7, 437.3, 436.0, 434.7, 433.4, 432.1, 430.9, 429.7, 428.5, 427.4, 426.3, 425.3, 424.3, 423.4, 422.5, 421.7, 421.0, 420.3, 419.7, 419.2, 418.7, 418.3, 418.0, 417.8, 417.7, 417.6], "ys": [696.3, 696.4, 696.6, 696.7, 696.9, 697.1, 697.4, 697.6, 697.9, 698.2, 698.5, 698.8, 699.1, 699.4, 699.8, 700.2, 700.5, 700.9, 701.3, 701.7, 702.1, 702.5, 703.0, 703.4, 703.8, 704.2, 704.7, 705.1, 705.5, 705.9, 706.3, 706.8, 707.2, 707.5, 707.9, 708.3, 708.7, 709.0, 709.3, 709.6, 709.9, 710.2, 710.5, 710.7, 710.9, 711.1, 711.3, 711.4, 711.5, 711.6, 711.7, 711.7, 711.8], "step": 0.2}, {"id": "kn_logicboard", "t0": 93.5, "t1": 103.66666666666667, "xs": [1124.7, 1124.9, 1125.1, 1125.3, 1125.5, 1125.8, 1126.0, 1126.3, 1126.6, 1127.0, 1127.3, 1127.6, 1128.0, 1128.4, 1128.8, 1129.2, 1129.6, 1130.0, 1130.4, 1130.9, 1131.3, 1131.8, 1132.2, 1132.7, 1133.1, 1133.6, 1134.0, 1134.4, 1134.9, 1135.3, 1135.7, 1136.2, 1136.6, 1137.0, 1137.3, 1137.7, 1138.1, 1138.4, 1138.7, 1139.0, 1139.3, 1139.6, 1139.8, 1140.0, 1140.2, 1140.4, 1140.5, 1140.6, 1140.7, 1140.8, 1140.8], "ys": [686.6, 686.8, 686.9, 687.1, 687.3, 687.5, 687.8, 688.0, 688.3, 688.6, 688.9, 689.2, 689.5, 689.9, 690.2, 690.6, 690.9, 691.3, 691.7, 692.1, 692.5, 692.9, 693.3, 693.7, 694.1, 694.5, 694.9, 695.3, 695.6, 696.0, 696.4, 696.8, 697.1, 697.5, 697.8, 698.2, 698.5, 698.8, 699.1, 699.3, 699.6, 699.8, 700.0, 700.2, 700.4, 700.5, 700.6, 700.7, 700.8, 700.9, 700.9], "step": 0.2}, {"id": "kn_trackpad", "t0": 93.8, "t1": 103.66666666666667, "xs": [1595.2, 1596.0, 1596.8, 1597.8, 1598.8, 1599.8, 1601.0, 1602.2, 1603.4, 1604.8, 1606.1, 1607.6, 1609.0, 1610.6, 1612.1, 1613.7, 1615.3, 1617.0, 1618.7, 1620.4, 1622.1, 1623.8, 1625.6, 1627.3, 1629.0, 1630.8, 1632.5, 1634.1, 1635.8, 1637.4, 1639.0, 1640.6, 1642.0, 1643.5, 1644.9, 1646.2, 1647.5, 1648.6, 1649.8, 1650.8, 1651.7, 1652.6, 1653.4, 1654.1, 1654.6, 1655.1, 1655.5, 1655.8, 1656.0, 1656.1], "ys": [691.8, 692.0, 692.2, 692.4, 692.6, 692.9, 693.2, 693.5, 693.8, 694.1, 694.4, 694.7, 695.1, 695.5, 695.8, 696.2, 696.6, 697.0, 697.4, 697.8, 698.2, 698.6, 699.0, 699.5, 699.9, 700.3, 700.7, 701.1, 701.5, 701.9, 702.3, 702.6, 703.0, 703.3, 703.7, 704.0, 704.3, 704.6, 704.8, 705.1, 705.3, 705.5, 705.7, 705.9, 706.0, 706.1, 706.2, 706.3, 706.3, 706.3], "step": 0.2}, {"id": "kn_speaker_L", "t0": 94.1, "t1": 103.66666666666667, "xs": [364.9, 364.1, 363.2, 362.2, 361.2, 360.1, 358.9, 357.7, 356.4, 355.1, 353.8, 352.4, 350.9, 349.5, 347.9, 346.4, 344.8, 343.3, 341.7, 340.0, 338.4, 336.8, 335.2, 333.6, 332.0, 330.4, 328.8, 327.3, 325.8, 324.3, 322.9, 321.5, 320.2, 318.9, 317.7, 316.6, 315.5, 314.5, 313.6, 312.7, 312.0, 311.3, 310.7, 310.2, 309.8, 309.5, 309.2, 309.1], "ys": [840.9, 841.3, 841.7, 842.2, 842.7, 843.3, 843.9, 844.5, 845.1, 845.8, 846.5, 847.2, 847.9, 848.7, 849.4, 850.2, 851.0, 851.8, 852.6, 853.4, 854.2, 855.1, 855.9, 856.7, 857.5, 858.3, 859.1, 859.9, 860.6, 861.4, 862.1, 862.8, 863.5, 864.1, 864.7, 865.3, 865.8, 866.3, 866.8, 867.2, 867.6, 868.0, 868.3, 868.5, 868.7, 868.9, 869.0, 869.1], "step": 0.2}, {"id": "kn_usbc0", "t0": 94.7, "t1": 103.66666666666667, "xs": [636.2, 635.6, 635.0, 634.4, 633.7, 633.1, 632.4, 631.6, 630.9, 630.1, 629.3, 628.5, 627.6, 626.8, 625.9, 625.0, 624.2, 623.3, 622.4, 621.5, 620.7, 619.8, 618.9, 618.1, 617.3, 616.4, 615.7, 614.9, 614.1, 613.4, 612.7, 612.1, 611.5, 610.9, 610.3, 609.8, 609.4, 609.0, 608.6, 608.3, 608.0, 607.8, 607.6, 607.5, 607.4], "ys": [951.8, 952.6, 953.3, 954.1, 954.9, 955.8, 956.7, 957.6, 958.6, 959.6, 960.6, 961.7, 962.7, 963.8, 964.9, 966.0, 967.1, 968.2, 969.3, 970.5, 971.6, 972.7, 973.8, 974.8, 975.9, 976.9, 977.9, 978.9, 979.9, 980.8, 981.6, 982.5, 983.3, 984.0, 984.7, 985.3, 985.9, 986.5, 986.9, 987.3, 987.7, 988.0, 988.2, 988.3, 988.4], "step": 0.2}, {"id": "kn_magsafe", "t0": 95.33333333333333, "t1": 103.66666666666667, "xs": [767.9, 767.5, 767.1, 766.7, 766.3, 765.8, 765.4, 764.9, 764.4, 763.9, 763.4, 762.9, 762.4, 761.9, 761.4, 760.8, 760.3, 759.8, 759.3, 758.8, 758.3, 757.8, 757.3, 756.9, 756.4, 756.0, 755.5, 755.1, 754.8, 754.4, 754.1, 753.7, 753.5, 753.2, 752.9, 752.7, 752.6, 752.4, 752.3, 752.2, 752.1, 752.1], "ys": [844.0, 844.6, 845.2, 845.9, 846.6, 847.3, 848.0, 848.8, 849.6, 850.3, 851.1, 851.9, 852.7, 853.6, 854.4, 855.2, 856.0, 856.8, 857.6, 858.4, 859.2, 860.0, 860.8, 861.5, 862.2, 862.9, 863.6, 864.2, 864.8, 865.4, 865.9, 866.4, 866.9, 867.3, 867.7, 868.0, 868.3, 868.6, 868.8, 868.9, 869.0, 869.1], "step": 0.2}, {"id": "kn_audioflex", "t0": 95.63333333333334, "t1": 103.66666666666667, "xs": [893.0, 892.8, 892.7, 892.5, 892.4, 892.2, 892.0, 891.9, 891.7, 891.5, 891.4, 891.2, 891.0, 890.8, 890.6, 890.5, 890.3, 890.1, 889.9, 889.8, 889.6, 889.4, 889.3, 889.1, 889.0, 888.8, 888.7, 888.5, 888.4, 888.3, 888.2, 888.1, 888.0, 887.9, 887.9, 887.8, 887.8, 887.7, 887.7, 887.7, 887.7], "ys": [955.5, 956.4, 957.3, 958.3, 959.3, 960.3, 961.3, 962.4, 963.4, 964.5, 965.6, 966.7, 967.8, 969.0, 970.1, 971.2, 972.3, 973.4, 974.5, 975.5, 976.6, 977.6, 978.6, 979.6, 980.5, 981.4, 982.2, 983.0, 983.8, 984.5, 985.1, 985.7, 986.3, 986.8, 987.2, 987.6, 987.9, 988.1, 988.3, 988.4, 988.4], "step": 0.2}, {"id": "kn_touchidboard", "t0": 95.93333333333334, "t1": 103.66666666666667, "xs": [1010.4, 1010.5, 1010.7, 1010.8, 1010.9, 1011.0, 1011.2, 1011.3, 1011.4, 1011.6, 1011.7, 1011.8, 1012.0, 1012.1, 1012.2, 1012.4, 1012.5, 1012.6, 1012.7, 1012.9, 1013.0, 1013.1, 1013.2, 1013.3, 1013.4, 1013.5, 1013.6, 1013.7, 1013.8, 1013.9, 1014.0, 1014.0, 1014.1, 1014.1, 1014.2, 1014.2, 1014.2, 1014.2, 1014.2], "ys": [845.9, 846.6, 847.3, 848.0, 848.8, 849.6, 850.3, 851.1, 851.9, 852.7, 853.6, 854.4, 855.2, 856.0, 856.8, 857.6, 858.4, 859.2, 860.0, 860.8, 861.5, 862.2, 862.9, 863.6, 864.2, 864.8, 865.4, 865.9, 866.4, 866.9, 867.3, 867.7, 868.0, 868.3, 868.6, 868.8, 868.9, 869.0, 869.1], "step": 0.2}, {"id": "kn_batcover", "t0": 96.23333333333333, "t1": 103.66666666666667, "xs": [1103.4, 1103.7, 1104.0, 1104.4, 1104.8, 1105.1, 1105.5, 1105.9, 1106.3, 1106.6, 1107.0, 1107.4, 1107.8, 1108.2, 1108.5, 1108.9, 1109.3, 1109.6, 1110.0, 1110.3, 1110.7, 1111.0, 1111.3, 1111.6, 1111.8, 1112.1, 1112.3, 1112.6, 1112.8, 1113.0, 1113.1, 1113.3, 1113.4, 1113.5, 1113.6, 1113.6, 1113.7, 1113.7], "ys": [958.3, 959.3, 960.3, 961.3, 962.4, 963.4, 964.5, 965.6, 966.7, 967.8, 969.0, 970.1, 971.2, 972.3, 973.4, 974.5, 975.5, 976.6, 977.6, 978.6, 979.6, 980.5, 981.4, 982.2, 983.0, 983.8, 984.5, 985.1, 985.7, 986.3, 986.8, 987.2, 987.6, 987.9, 988.1, 988.3, 988.4, 988.4], "step": 0.2}, {"id": "kn_hingecover0", "t0": 96.53333333333333, "t1": 103.66666666666667, "xs": [1239.3, 1239.9, 1240.6, 1241.4, 1242.1, 1242.8, 1243.5, 1244.3, 1245.0, 1245.8, 1246.5, 1247.2, 1248.0, 1248.7, 1249.4, 1250.1, 1250.8, 1251.5, 1252.1, 1252.7, 1253.3, 1253.9, 1254.5, 1255.0, 1255.5, 1255.9, 1256.3, 1256.7, 1257.1, 1257.4, 1257.6, 1257.9, 1258.0, 1258.2, 1258.3, 1258.3], "ys": [848.0, 848.8, 849.6, 850.3, 851.1, 851.9, 852.7, 853.6, 854.4, 855.2, 856.0, 856.8, 857.6, 858.4, 859.2, 860.0, 860.8, 861.5, 862.2, 862.9, 863.6, 864.2, 864.8, 865.4, 865.9, 866.4, 866.9, 867.3, 867.7, 868.0, 868.3, 868.6, 868.8, 868.9, 869.0, 869.1], "step": 0.2}, {"id": "kn_screw_b0", "t0": 97.13333333333334, "t1": 103.66666666666667, "xs": [1442.6, 1443.8, 1445.1, 1446.3, 1447.6, 1448.9, 1450.2, 1451.4, 1452.7, 1453.9, 1455.2, 1456.4, 1457.6, 1458.8, 1459.9, 1461.0, 1462.1, 1463.2, 1464.1, 1465.1, 1466.0, 1466.8, 1467.6, 1468.3, 1469.0, 1469.6, 1470.1, 1470.5, 1470.9, 1471.2, 1471.5, 1471.6, 1471.7], "ys": [962.9, 964.0, 965.1, 966.2, 967.3, 968.4, 969.5, 970.6, 971.8, 972.9, 973.9, 975.0, 976.1, 977.1, 978.1, 979.1, 980.0, 980.9, 981.8, 982.6, 983.4, 984.1, 984.8, 985.4, 986.0, 986.5, 987.0, 987.4, 987.7, 988.0, 988.2, 988.3, 988.4], "step": 0.2}], "explode": [{"id": "ex0", "t0": 106.06666666666666, "t1": 115.03333333333333, "xs": [1247.3, 1246.1, 1245.4, 1245.0, 1244.9, 1244.8, 1244.8, 1244.6, 1244.3, 1243.8, 1243.1, 1242.3, 1241.3, 1240.1, 1238.7, 1237.2, 1235.5, 1233.6, 1231.5, 1229.3, 1226.9, 1224.2, 1221.4, 1218.4, 1215.2, 1211.8, 1208.2, 1204.5, 1200.5, 1196.4, 1192.1, 1187.6, 1182.9, 1178.0, 1173.0, 1167.9, 1162.5, 1157.1, 1151.5, 1145.8, 1140.0, 1134.0, 1128.0, 1121.9, 1115.7, 1109.5, 1103.3, 1097.0, 1090.7, 1084.4, 1078.1, 1071.8, 1065.6, 1059.4, 1053.3, 1047.3, 1041.4, 1035.6, 1029.9, 1024.4, 1019.0, 1013.8, 1008.7, 1003.9, 999.2, 994.7, 990.5, 986.4, 982.6, 979.1, 975.8, 972.7, 969.9, 967.3, 965.1, 963.1, 961.4, 959.9, 958.8, 957.9, 957.3, 957.0, 957.0, 957.0, 956.9, 956.9, 956.7, 956.5, 956.1, 955.7, 955.1, 954.3, 953.4, 952.3, 950.9, 949.3, 947.5, 945.3, 942.9, 940.1, 937.0, 933.5, 929.6, 925.3, 920.5, 915.2, 909.4, 903.1, 896.1, 888.5, 880.3, 871.3, 862.5, 854.1, 846.3, 839.0, 832.1, 825.7, 819.8, 814.4, 809.4, 804.9, 800.8, 797.1, 793.8, 790.8, 788.3, 786.0, 784.1, 782.5, 781.1, 780.0, 779.1, 778.4, 777.8], "ys": [243.3, 245.3, 246.6, 247.3, 247.7, 247.8, 247.7, 247.7, 247.6, 247.5, 247.3, 247.1, 246.8, 246.5, 246.1, 245.7, 245.3, 244.8, 244.3, 243.8, 243.2, 242.7, 242.1, 241.4, 240.8, 240.2, 239.5, 238.8, 238.2, 237.5, 236.9, 236.2, 235.5, 234.9, 234.3, 233.7, 233.1, 232.5, 232.0, 231.4, 230.9, 230.5, 230.0, 229.6, 229.2, 228.8, 228.5, 228.2, 227.9, 227.7, 227.5, 227.3, 227.1, 226.9, 226.8, 226.7, 226.6, 226.6, 226.6, 226.5, 226.5, 226.5, 226.6, 226.6, 226.6, 226.7, 226.7, 226.8, 226.9, 226.9, 227.0, 227.1, 227.1, 227.2, 227.2, 227.3, 227.3, 227.4, 227.4, 227.4, 227.4, 227.4, 227.4, 227.4, 227.4, 227.4, 227.4, 227.4, 227.5, 227.5, 227.5, 227.5, 227.5, 227.5, 227.6, 227.6, 227.6, 227.7, 227.7, 227.8, 227.9, 228.0, 228.1, 228.2, 228.4, 228.6, 228.8, 229.0, 229.3, 229.5, 229.8, 230.1, 230.4, 230.6, 230.8, 231.0, 231.1, 231.2, 231.3, 231.3, 231.3, 231.3, 231.3, 231.3, 231.3, 231.3, 231.2, 231.2, 231.2, 231.2, 231.1, 231.1, 231.1, 231.1, 231.1], "step": 0.06666666666666667}, {"id": "ex1", "t0": 106.53333333333333, "t1": 115.03333333333333, "xs": [908.5, 908.3, 908.2, 907.9, 907.6, 907.3, 906.9, 906.5, 906.0, 905.4, 904.8, 904.2, 903.5, 902.7, 902.0, 901.2, 900.3, 899.5, 898.6, 897.7, 896.8, 895.8, 894.9, 893.9, 893.0, 892.0, 891.0, 890.1, 889.1, 888.2, 887.3, 886.4, 885.5, 884.7, 883.9, 883.1, 882.4, 881.6, 881.0, 880.3, 879.7, 879.2, 878.7, 878.2, 877.8, 877.4, 877.0, 876.7, 876.5, 876.2, 876.0, 875.9, 875.8, 875.7, 875.6, 875.5, 875.5, 875.5, 875.6, 875.6, 875.6, 875.7, 875.8, 875.8, 875.9, 876.0, 876.1, 876.1, 876.2, 876.3, 876.3, 876.4, 876.4, 876.4, 876.4, 876.4, 876.4, 876.4, 876.4, 876.4, 876.4, 876.4, 876.4, 876.4, 876.3, 876.3, 876.2, 876.2, 876.1, 876.1, 876.0, 875.9, 875.9, 875.8, 875.7, 875.7, 875.6, 875.6, 875.6, 875.7, 875.8, 876.0, 876.2, 876.5, 877.0, 877.5, 878.0, 878.6, 879.2, 879.9, 880.5, 881.1, 881.7, 882.3, 882.8, 883.3, 883.8, 884.2, 884.6, 884.9, 885.2, 885.5, 885.7, 885.9, 886.1, 886.2, 886.3, 886.4], "ys": [517.3, 517.4, 517.4, 517.5, 517.7, 517.8, 518.0, 518.2, 518.4, 518.6, 518.9, 519.1, 519.5, 519.8, 520.1, 520.5, 520.9, 521.3, 521.8, 522.3, 522.7, 523.3, 523.8, 524.3, 524.9, 525.5, 526.1, 526.7, 527.3, 528.0, 528.6, 529.3, 530.0, 530.7, 531.4, 532.1, 532.8, 533.5, 534.3, 535.0, 535.7, 536.4, 537.1, 537.8, 538.5, 539.2, 539.9, 540.6, 541.2, 541.9, 542.5, 543.1, 543.7, 544.3, 544.8, 545.4, 545.9, 546.4, 546.8, 547.3, 547.7, 548.1, 548.5, 548.8, 549.1, 549.4, 549.7, 549.9, 550.1, 550.3, 550.4, 550.5, 550.6, 550.7, 550.7, 550.7, 550.7, 550.7, 550.7, 550.7, 550.8, 550.8, 550.9, 551.0, 551.1, 551.2, 551.4, 551.6, 551.8, 552.1, 552.4, 552.7, 553.1, 553.6, 554.0, 554.5, 555.1, 555.7, 556.3, 557.0, 557.8, 558.6, 559.4, 560.2, 561.1, 561.9, 562.6, 563.3, 563.8, 564.3, 564.8, 565.2, 565.6, 565.9, 566.1, 566.4, 566.6, 566.8, 566.9, 567.1, 567.2, 567.3, 567.4, 567.4, 567.5, 567.5, 567.6, 567.6], "step": 0.06666666666666667}, {"id": "ex2", "t0": 107.03333333333333, "t1": 115.03333333333333, "xs": [661.3, 661.0, 660.7, 660.4, 660.1, 659.8, 659.6, 659.4, 659.2, 659.1, 659.1, 659.1, 659.2, 659.4, 659.8, 660.2, 660.8, 661.5, 662.3, 663.4, 664.5, 665.8, 667.4, 669.0, 670.9, 672.9, 675.1, 677.5, 680.1, 682.9, 685.8, 688.9, 692.2, 695.6, 699.1, 702.8, 706.7, 710.6, 714.6, 718.7, 722.9, 727.1, 731.3, 735.6, 739.9, 744.1, 748.3, 752.5, 756.6, 760.5, 764.4, 768.2, 771.8, 775.3, 778.6, 781.7, 784.6, 787.3, 789.8, 792.0, 794.0, 795.8, 797.3, 798.5, 799.5, 800.2, 800.6, 800.7, 800.7, 800.7, 800.8, 800.9, 801.0, 801.2, 801.5, 801.9, 802.4, 803.1, 803.9, 804.8, 806.0, 807.3, 808.9, 810.7, 812.8, 815.2, 818.0, 821.1, 824.6, 828.6, 833.1, 838.2, 843.9, 850.3, 857.5, 865.6, 874.7, 884.4, 894.0, 903.3, 912.1, 920.6, 928.7, 936.3, 943.5, 950.2, 956.3, 962.0, 967.2, 971.9, 976.1, 979.8, 983.1, 985.9, 988.4, 990.5, 992.2, 993.6, 994.7, 995.6, 996.2], "ys": [690.1, 691.2, 692.4, 693.7, 695.2, 696.7, 698.4, 700.1, 702.0, 703.9, 705.9, 708.0, 710.2, 712.5, 714.9, 717.3, 719.8, 722.3, 724.9, 727.5, 730.2, 732.9, 735.6, 738.4, 741.2, 743.9, 746.7, 749.5, 752.3, 755.0, 757.7, 760.4, 763.1, 765.7, 768.3, 770.8, 773.2, 775.6, 777.9, 780.2, 782.4, 784.5, 786.5, 788.5, 790.3, 792.1, 793.8, 795.4, 796.9, 798.4, 799.7, 801.0, 802.2, 803.3, 804.3, 805.2, 806.0, 806.8, 807.5, 808.1, 808.7, 809.1, 809.5, 809.8, 810.1, 810.3, 810.4, 810.4, 810.4, 810.4, 810.4, 810.5, 810.6, 810.7, 810.9, 811.1, 811.4, 811.8, 812.3, 812.9, 813.5, 814.3, 815.2, 816.2, 817.3, 818.5, 819.9, 821.5, 823.1, 824.9, 826.9, 829.0, 831.2, 833.6, 836.2, 838.8, 841.6, 844.4, 847.0, 849.3, 851.4, 853.4, 855.1, 856.7, 858.1, 859.4, 860.6, 861.6, 862.5, 863.4, 864.1, 864.7, 865.3, 865.7, 866.1, 866.5, 866.8, 867.0, 867.2, 867.3, 867.4], "step": 0.06666666666666667}, {"id": "ex3", "t0": 107.5, "t1": 115.03333333333333, "xs": [861.0, 865.1, 869.4, 874.0, 878.8, 883.9, 889.1, 894.6, 900.3, 906.1, 912.2, 918.4, 924.8, 931.4, 938.1, 944.9, 951.9, 958.9, 966.0, 973.2, 980.4, 987.6, 994.9, 1002.1, 1009.4, 1016.5, 1023.7, 1030.7, 1037.7, 1044.5, 1051.2, 1057.8, 1064.2, 1070.5, 1076.6, 1082.5, 1088.2, 1093.7, 1099.0, 1104.1, 1109.0, 1113.6, 1118.0, 1122.1, 1126.1, 1129.7, 1133.2, 1136.4, 1139.3, 1142.1, 1144.5, 1146.8, 1148.8, 1150.5, 1152.0, 1153.3, 1154.4, 1155.2, 1155.8, 1156.1, 1156.2, 1156.2, 1156.3, 1156.3, 1156.5, 1156.7, 1157.0, 1157.5, 1158.1, 1158.9, 1159.9, 1161.0, 1162.5, 1164.2, 1166.2, 1168.5, 1171.1, 1174.1, 1177.5, 1181.3, 1185.5, 1190.2, 1195.3, 1201.0, 1207.2, 1214.0, 1221.4, 1229.4, 1238.1, 1247.5, 1257.2, 1266.3, 1274.8, 1282.7, 1290.0, 1296.7, 1303.0, 1308.6, 1313.8, 1318.5, 1322.7, 1326.5, 1329.9, 1332.9, 1335.6, 1337.9, 1339.9, 1341.6, 1343.0, 1344.1, 1345.1, 1345.8, 1346.4, 1346.8], "ys": [749.1, 749.8, 750.5, 751.2, 751.9, 752.6, 753.3, 753.9, 754.6, 755.2, 755.8, 756.3, 756.8, 757.3, 757.7, 758.0, 758.3, 758.6, 758.8, 758.9, 759.0, 759.0, 759.0, 758.8, 758.7, 758.4, 758.2, 757.8, 757.4, 757.0, 756.5, 755.9, 755.4, 754.8, 754.1, 753.4, 752.8, 752.1, 751.3, 750.6, 749.9, 749.2, 748.5, 747.8, 747.1, 746.4, 745.8, 745.1, 744.6, 744.0, 743.5, 743.0, 742.6, 742.2, 741.9, 741.6, 741.3, 741.1, 741.0, 740.9, 740.9, 740.9, 740.9, 740.9, 740.9, 740.9, 740.9, 740.8, 740.8, 740.8, 740.7, 740.7, 740.6, 740.5, 740.4, 740.3, 740.2, 740.1, 739.9, 739.8, 739.6, 739.4, 739.2, 738.9, 738.7, 738.5, 738.2, 738.0, 737.8, 737.6, 737.5, 737.4, 737.4, 737.5, 737.7, 737.8, 738.1, 738.3, 738.5, 738.8, 739.1, 739.3, 739.6, 739.8, 740.0, 740.2, 740.4, 740.5, 740.7, 740.8, 740.9, 740.9, 741.0, 741.1], "step": 0.06666666666666667}, {"id": "ex4", "t0": 108.0, "t1": 115.03333333333333, "xs": [813.2, 812.9, 812.7, 812.6, 812.4, 812.4, 812.4, 812.5, 812.6, 812.8, 813.1, 813.5, 813.9, 814.5, 815.1, 815.8, 816.5, 817.4, 818.3, 819.3, 820.3, 821.4, 822.6, 823.8, 825.1, 826.4, 827.8, 829.2, 830.6, 832.0, 833.5, 834.9, 836.4, 837.8, 839.2, 840.6, 842.0, 843.3, 844.6, 845.8, 847.0, 848.1, 849.1, 850.0, 850.9, 851.7, 852.4, 853.0, 853.5, 853.9, 854.2, 854.4, 854.5, 854.5, 854.5, 854.6, 854.6, 854.6, 854.7, 854.7, 854.9, 855.0, 855.2, 855.4, 855.7, 856.0, 856.4, 856.9, 857.4, 858.1, 858.8, 859.7, 860.7, 861.8, 863.1, 864.5, 866.2, 868.0, 870.2, 872.6, 875.3, 878.4, 881.9, 885.5, 889.0, 892.4, 895.7, 898.9, 901.9, 904.7, 907.4, 909.8, 912.1, 914.2, 916.1, 917.9, 919.4, 920.8, 922.0, 923.0, 923.9, 924.7, 925.3, 925.8, 926.2, 926.5], "ys": [690.5, 691.9, 693.3, 694.7, 696.2, 697.6, 699.1, 700.7, 702.2, 703.8, 705.3, 706.9, 708.5, 710.1, 711.7, 713.2, 714.8, 716.4, 717.9, 719.4, 720.9, 722.4, 723.9, 725.3, 726.7, 728.0, 729.4, 730.6, 731.9, 733.1, 734.2, 735.3, 736.4, 737.4, 738.4, 739.3, 740.2, 741.0, 741.8, 742.5, 743.1, 743.8, 744.3, 744.8, 745.3, 745.7, 746.1, 746.4, 746.6, 746.8, 747.0, 747.1, 747.1, 747.1, 747.1, 747.2, 747.2, 747.3, 747.4, 747.5, 747.8, 748.0, 748.4, 748.8, 749.3, 750.0, 750.7, 751.5, 752.5, 753.6, 754.8, 756.2, 757.8, 759.5, 761.4, 763.5, 765.7, 768.2, 770.9, 773.8, 776.9, 780.3, 783.9, 787.4, 790.7, 793.7, 796.6, 799.2, 801.6, 803.9, 805.9, 807.8, 809.5, 811.0, 812.4, 813.7, 814.8, 815.7, 816.6, 817.3, 817.9, 818.4, 818.8, 819.1, 819.4, 819.6], "step": 0.06666666666666667}, {"id": "ex5", "t0": 108.5, "t1": 115.03333333333333, "xs": [866.2, 864.1, 862.1, 860.1, 858.1, 856.1, 854.2, 852.3, 850.4, 848.6, 846.9, 845.2, 843.6, 842.0, 840.5, 839.1, 837.7, 836.4, 835.1, 834.0, 832.9, 831.9, 830.9, 830.0, 829.2, 828.4, 827.7, 827.0, 826.5, 825.9, 825.4, 825.0, 824.6, 824.3, 823.9, 823.7, 823.4, 823.2, 823.0, 822.9, 822.8, 822.7, 822.6, 822.5, 822.5, 822.5, 822.5, 822.5, 822.5, 822.5, 822.4, 822.3, 822.3, 822.1, 822.0, 821.8, 821.5, 821.2, 820.9, 820.5, 820.1, 819.6, 819.0, 818.4, 817.7, 816.9, 816.1, 815.2, 814.3, 813.3, 812.2, 811.1, 810.0, 808.8, 807.7, 806.6, 805.6, 804.8, 804.1, 803.5, 803.0, 802.6, 802.3, 802.0, 801.8, 801.6, 801.5, 801.4, 801.3, 801.2, 801.2, 801.2, 801.1, 801.1, 801.1, 801.1, 801.1, 801.1, 801.1], "ys": [683.0, 684.1, 685.4, 686.6, 687.9, 689.2, 690.5, 691.8, 693.1, 694.5, 695.8, 697.2, 698.6, 699.9, 701.3, 702.6, 704.0, 705.3, 706.6, 707.9, 709.2, 710.5, 711.7, 712.9, 714.1, 715.2, 716.3, 717.3, 718.3, 719.3, 720.2, 721.1, 721.9, 722.6, 723.3, 724.0, 724.6, 725.1, 725.6, 726.0, 726.3, 726.6, 726.8, 727.0, 727.1, 727.1, 727.1, 727.1, 727.2, 727.2, 727.3, 727.5, 727.7, 728.1, 728.5, 729.0, 729.6, 730.3, 731.2, 732.3, 733.4, 734.8, 736.4, 738.1, 740.1, 742.2, 744.7, 747.4, 750.3, 753.5, 757.1, 760.9, 765.1, 769.7, 774.6, 779.7, 784.6, 789.1, 793.4, 797.3, 801.0, 804.4, 807.6, 810.5, 813.1, 815.5, 817.6, 819.6, 821.3, 822.8, 824.1, 825.3, 826.3, 827.1, 827.8, 828.3, 828.8, 829.1, 829.4], "step": 0.06666666666666667}, {"id": "ex6", "t0": 108.96666666666667, "t1": 115.03333333333333, "xs": [1069.0, 1072.8, 1076.5, 1080.2, 1083.8, 1087.3, 1090.7, 1094.0, 1097.2, 1100.3, 1103.2, 1106.1, 1108.8, 1111.4, 1113.9, 1116.2, 1118.4, 1120.6, 1122.5, 1124.4, 1126.1, 1127.8, 1129.3, 1130.7, 1131.9, 1133.1, 1134.2, 1135.2, 1136.1, 1136.9, 1137.6, 1138.2, 1138.7, 1139.1, 1139.5, 1139.7, 1139.9, 1140.1, 1140.1, 1140.1, 1140.1, 1140.1, 1140.2, 1140.3, 1140.5, 1140.7, 1141.0, 1141.4, 1141.9, 1142.5, 1143.2, 1144.0, 1145.0, 1146.1, 1147.4, 1148.8, 1150.5, 1152.3, 1154.3, 1156.6, 1159.0, 1161.7, 1164.6, 1167.8, 1171.2, 1174.9, 1178.9, 1183.1, 1187.4, 1191.5, 1195.2, 1198.7, 1201.8, 1204.7, 1207.4, 1209.8, 1212.0, 1213.9, 1215.7, 1217.3, 1218.7, 1219.9, 1221.0, 1222.0, 1222.8, 1223.5, 1224.0, 1224.5, 1224.9, 1225.2, 1225.4, 1225.6], "ys": [866.3, 865.7, 865.1, 864.5, 863.8, 863.2, 862.5, 861.8, 861.0, 860.3, 859.5, 858.8, 858.0, 857.3, 856.5, 855.7, 855.0, 854.3, 853.6, 852.9, 852.2, 851.5, 850.9, 850.3, 849.7, 849.2, 848.7, 848.2, 847.7, 847.3, 847.0, 846.7, 846.4, 846.1, 845.9, 845.8, 845.7, 845.6, 845.6, 845.6, 845.6, 845.6, 845.7, 845.7, 845.8, 846.0, 846.1, 846.4, 846.7, 847.0, 847.5, 848.0, 848.6, 849.3, 850.1, 851.0, 852.1, 853.3, 854.6, 856.2, 857.9, 859.8, 861.9, 864.2, 866.8, 869.8, 873.0, 876.6, 880.5, 884.2, 887.8, 891.3, 894.6, 897.7, 900.7, 903.5, 906.0, 908.4, 910.6, 912.6, 914.5, 916.1, 917.5, 918.8, 919.9, 920.9, 921.7, 922.4, 922.9, 923.3, 923.7, 923.9], "step": 0.06666666666666667}], "chapters": [{"t0": 15.878, "t1": 31.492, "num": "01"}, {"t0": 31.492, "t1": 41.251, "num": "02"}, {"t0": 41.251, "t1": 47.107, "num": "03"}, {"t0": 47.107, "t1": 51.01, "num": "04"}, {"t0": 51.01, "t1": 52.962, "num": "05"}, {"t0": 52.962, "t1": 56.865, "num": "06"}, {"t0": 56.865, "t1": 68.576, "num": "07"}, {"t0": 68.576, "t1": 72.48, "num": "08"}, {"t0": 72.48, "t1": 84.19, "num": "09"}, {"t0": 84.19, "t1": 91.997, "num": "10"}, {"t0": 91.997, "t1": 103.708, "num": ""}, {"t0": 103.708, "t1": 115.419, "num": ""}], "texts": [{"kind": "title", "t0": 4.418, "t1": 9.823}, {"kind": "stat", "t0": 10.423, "t1": 13.776}, {"kind": "note", "t0": 19.001, "t1": 23.295}, {"kind": "note", "t0": 23.985, "t1": 25.537}, {"kind": "stat", "t0": 37.348, "t1": 40.861}, {"kind": "note", "t0": 41.837, "t1": 43.984}, {"kind": "stat", "t0": 76.383, "t1": 78.237}, {"kind": "note", "t0": 81.848, "t1": 83.995}, {"kind": "note", "t0": 89.85, "t1": 91.9}, {"kind": "end", "t0": 119.034, "t1": 123.21}, {"kind": "disclaimer", "t0": 119.734, "t1": 123.21}], "bars": [0.264, 2.2158, 4.1675, 6.1193, 8.0711, 10.0229, 11.9746, 13.9264, 15.8782, 17.83, 19.7817, 21.7335, 23.6853, 25.6371, 27.5888, 29.5406, 31.4924, 33.4442, 35.3959, 37.3477, 39.2995, 41.2513, 43.203, 45.1548, 47.1066, 49.0584, 51.0101, 52.9619, 54.9137, 56.8655, 58.8172, 60.769, 62.7208, 64.6726, 66.6243, 68.5761, 70.5279, 72.4797, 74.4314, 76.3832, 78.335, 80.2868, 82.2385, 84.1903, 86.1421, 88.0939, 90.0456, 91.9974, 93.9492, 95.901, 97.8527, 99.8045, 101.7563, 103.7081, 105.6598, 107.6116, 109.5634, 111.5152, 113.4669, 115.4187, 117.3705, 119.3223, 121.274, 123.2258], "dur": 123.21};
+const tl = gsap.timeline({ paused: true });
+const q = (id) => document.getElementById(id);
+// 标注：跟着锚点走 + 出现/消失
+function track(el, it) {
+  const n = it.xs.length;
+  tl.set(el, { x: it.xs[0], y: it.ys[0] }, Math.max(0, it.t0 - 0.02));
+  if (n > 1) tl.to(el, { keyframes: { x: it.xs, y: it.ys, easeEach: "none" }, duration: (n - 1) * it.step, ease: "none" }, it.t0);
+}
+for (const it of D.callouts) {
+  const el = q(it.id);
+  track(el, it);
+  const line = el.querySelector(".co-line");
+  const len = 520;
+  line.style.strokeDasharray = len;
+  tl.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none" }, it.t0);
+  tl.fromTo(el.querySelector(".co-dot"), { scale: 0 }, { scale: 1, duration: 0.35, ease: "back.out(2.5)" }, it.t0);
+  tl.fromTo(el.querySelector(".co-ring"), { scale: 0.4, opacity: 0.9 }, { scale: 1.6, opacity: 0, duration: 0.7, ease: "expo.out" }, it.t0 + 0.05);
+  tl.fromTo(line, { strokeDashoffset: len }, { strokeDashoffset: 0, duration: 0.45, ease: "power2.out" }, it.t0 + 0.05);
+  const lab = el.querySelector(".co-lab");
+  const dir = lab.classList.contains("co-r") ? -18 : 18;
+  tl.fromTo(lab, { opacity: 0, x: dir }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, it.t0 + 0.22);
+  const tOut = Math.max(it.t0 + 0.6, it.t1 - 0.28);
+  tl.to(el, { opacity: 0, duration: 0.26, ease: "power1.in" }, tOut);
+}
+for (const it of D.explode) {
+  const el = q(it.id);
+  track(el, it);
+  const line = el.querySelector(".co-line");
+  line.style.strokeDasharray = 300;
+  tl.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none" }, it.t0);
+  tl.fromTo(el.querySelector(".co-dot"), { scale: 0 }, { scale: 1, duration: 0.3, ease: "back.out(2.5)" }, it.t0);
+  tl.fromTo(line, { strokeDashoffset: 300 }, { strokeDashoffset: 0, duration: 0.4, ease: "power2.out" }, it.t0 + 0.05);
+  const lab = el.querySelector(".co-lab");
+  tl.fromTo(lab, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, it.t0 + 0.18);
+  tl.to(el, { opacity: 0, duration: 0.3, ease: "power1.in" }, Math.max(it.t0 + 0.6, it.t1 - 0.3));
+}
+for (const it of D.knoll) {
+  const el = q(it.id);
+  track(el, it);
+  tl.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: "power2.out" }, it.t0);
+  tl.fromTo(el.querySelector(".kn-lab"), { y: 8 }, { y: 0, duration: 0.45, ease: "power3.out" }, it.t0);
+  tl.to(el, { opacity: 0, duration: 0.25, ease: "power1.in" }, it.t1 - 0.25);
+}
+// 章节卡
+D.chapters.forEach((c, i) => {
+  const el = q("ch" + i);
+  const hold = Math.min(2.9, c.t1 - c.t0 - 0.25);
+  const sc = q("chs" + i);
+  tl.fromTo(sc, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.out" }, c.t0);
+  tl.to(sc, { opacity: 0, duration: 0.5, ease: "power1.in" }, c.t0 + hold);
+  tl.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.2, ease: "none" }, c.t0 + 0.05);
+  tl.fromTo(el.querySelector(".card-rule"), { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "expo.out" }, c.t0 + 0.05);
+  tl.fromTo(el.querySelector(".card-t"), { y: 46, opacity: 0, clipPath: "inset(0 0 100% 0)" },
+    { y: 0, opacity: 1, clipPath: "inset(0 0 0% 0)", duration: 0.7, ease: "expo.out" }, c.t0 + 0.1);
+  tl.to(el, { opacity: 0, y: -14, duration: 0.4, ease: "power2.in" }, c.t0 + hold);
+});
+// 文字块
+D.texts.forEach((t, i) => {
+  const el = q("tx" + i);
+  const sc = q("txs" + i);
+  if (sc) {
+    tl.fromTo(sc, { opacity: 0 }, { opacity: 1, duration: 0.45, ease: "power1.out" }, t.t0);
+    tl.to(sc, { opacity: 0, duration: 0.45, ease: "power1.in" }, t.t1 - 0.4);
+  }
+  if (t.kind === "title") {
+    tl.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.2 }, t.t0);
+    tl.fromTo(el.querySelector(".tt-main"), { y: 60, clipPath: "inset(0 0 100% 0)" }, { y: 0, clipPath: "inset(0 0 0% 0)", duration: 1.0, ease: "expo.out" }, t.t0);
+    tl.fromTo(el.querySelector(".tt-sub"), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" }, t.t0 + 0.45);
+    tl.to(el, { opacity: 0, y: -20, duration: 0.5, ease: "power2.in" }, t.t1 - 0.5);
+  } else if (t.kind === "stat") {
+    tl.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.2 }, t.t0);
+    tl.fromTo(el.querySelector(".st-row"), { y: 50, clipPath: "inset(0 0 100% 0)" }, { y: 0, clipPath: "inset(0 0 0% 0)", duration: 0.8, ease: "expo.out" }, t.t0);
+    tl.fromTo(el.querySelector(".st-sub"), { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, t.t0 + 0.3);
+    tl.to(el, { opacity: 0, duration: 0.35, ease: "power2.in" }, t.t1 - 0.35);
+  } else if (t.kind === "note") {
+    tl.fromTo(el, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }, t.t0);
+    tl.to(el, { opacity: 0, duration: 0.3, ease: "power2.in" }, t.t1 - 0.3);
+  } else if (t.kind === "end") {
+    tl.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.2 }, t.t0);
+    tl.fromTo(el.querySelector(".en-main"), { y: 50, opacity: 0, scale: 1.04 }, { y: 0, opacity: 1, scale: 1, duration: 1.4, ease: "expo.out" }, t.t0);
+    tl.fromTo(el.querySelector(".en-sub"), { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "power2.out" }, t.t0 + 0.6);
+  } else if (t.kind === "disclaimer") {
+    tl.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "power2.out" }, t.t0);
+  }
+});
+// 进度条：拆解 10 步
+const pg = q("pg");
+const steps = D.chapters.filter((c) => c.num !== "");
+tl.fromTo(pg, { opacity: 0 }, { opacity: 1, duration: 0.5 }, steps[0].t0);
+steps.forEach((c, i) => {
+  tl.fromTo(q("pgf" + i), { scaleX: 0 }, { scaleX: 1, duration: c.t1 - c.t0, ease: "none" }, c.t0);
+});
+tl.to(pg, { opacity: 0, duration: 0.5 }, steps[steps.length - 1].t1 - 0.2);
+// 片尾压黑
+tl.fromTo("#blackout", { opacity: 0 }, { opacity: 1, duration: 1.3, ease: "power1.in" }, D.dur - 1.35);
+window.__timelines["main"] = tl;
+</script>
+</body>
+</html>
